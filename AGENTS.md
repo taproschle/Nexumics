@@ -58,6 +58,7 @@ The repository is in the initial documentation stage. The current versioned arti
 
 - `README.md`: project entry point.
 - `AGENTS.md`: public agent context and repository working guidelines.
+- `docs/data-sources.md`: source access strategy and NCBI Entrez decision record.
 - `docs/project-brief.md`: GitHub-readable project brief.
 - `docs/technical-design.md`: GitHub-readable technical design document.
 
@@ -68,16 +69,18 @@ The codebase has not been scaffolded yet.
 ## Current Priorities
 
 1. Keep public repository documentation coherent and fully in English.
-2. Define the source code structure before adding implementation files.
-3. Establish the ingestion pipeline and raw storage layer.
-4. Add bronze and silver transformations with explicit schemas.
-5. Add tests, validation checks, and observability as first-class project concerns.
-6. Publish a first queryable gold layer through PostgreSQL.
+2. Use NCBI Entrez E-utilities as the first source access layer.
+3. Define the source code structure before adding implementation files.
+4. Establish the ingestion pipeline and raw storage layer.
+5. Add bronze and silver transformations with explicit schemas.
+6. Add tests, validation checks, and observability as first-class project concerns.
+7. Publish a first queryable gold layer through PostgreSQL.
 
 ## Agent Working Guidelines
 
 - Read `README.md`, `AGENTS.md`, and the relevant files under `docs/` before making project-level decisions.
 - Preserve the lakehouse layering language: raw, bronze, silver, gold.
+- Treat NCBI Entrez E-utilities as the first source access layer unless the user explicitly revisits the decision.
 - Prefer small, well-scoped changes that make the project easier to understand.
 - Do not introduce a framework or service unless it supports the planned stack or the user explicitly approves the change.
 - Explain meaningful technical decisions in the user conversation before or while implementing them.
@@ -105,7 +108,7 @@ When a decision affects both public project direction and the user's learning co
 ## Open Decisions
 
 - Final source code folder structure.
-- First repository/source adapter to implement.
+- First Entrez database to implement: `sra`, `bioproject`, `biosample`, `gds`, or `geoprofiles`.
 - Initial refresh cadence: manual, scheduled batch, or orchestrated local run.
 - Whether the first user-facing exploration layer should be Metabase only or include a lightweight app later.
 - Whether cloud deployment belongs in the first milestone or a later extension.
