@@ -41,6 +41,15 @@ APIs -> Raw JSON -> Bronze Parquet -> Silver Standardized -> Gold Analytics -> P
 ## Repository Structure
 
 ```text
+pyproject.toml
+src/
+  nexumics/
+    entrez.py
+    raw_storage.py
+    sra_parser.py
+    cli/
+      sra_discovery.py
+tests/
 docs/
   data-sources.md
   sra-metadata-discovery.md
@@ -48,15 +57,40 @@ docs/
   technical-design.md
 ```
 
+## Local Setup
+
+Create and activate a virtual environment:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -e .
+```
+
+Run tests:
+
+```powershell
+python -m unittest discover -s tests
+```
+
+Run a small SRA metadata discovery flow:
+
+```powershell
+$env:NCBI_EMAIL = "your-email@example.com"
+nexumics-sra-discovery --retmax 3
+```
+
+The command writes raw Entrez responses and a bronze CSV preview under `data/`, which is intentionally ignored by Git.
+
 ## Current Status
 
-The repository is in the initial documentation stage. The next natural milestones are:
+The repository is in the first SRA metadata discovery stage. The next natural milestones are:
 
-1. Define the source code folder structure.
-2. Establish the ingestion pipeline and raw storage layer.
-3. Create the first bronze and silver transformations.
-4. Add tests, validation, and observability.
-5. Publish the first queryable gold layer.
+1. Exercise the SRA discovery flow on a small query.
+2. Review the raw XML and bronze CSV output.
+3. Decide which SRA fields should be promoted into a first silver schema.
+4. Add stronger validation around parsed bronze records.
+5. Introduce orchestration only after the manual flow is well understood.
 
 ## Repository Purpose
 

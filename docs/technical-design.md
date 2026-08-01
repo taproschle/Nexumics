@@ -66,6 +66,18 @@ Build analysis-ready tables and aggregates that are optimized for reporting, exp
 | Loading | Persist bronze, silver, and gold outputs. | DuckDB and Parquet support local development; PostgreSQL serves the curated layer. |
 | Serving | Expose curated data to users and tools. | Metabase or an equivalent BI layer consumes the final warehouse tables. |
 
+## Initial Implementation
+
+The first implementation focuses on a small SRA metadata discovery flow before introducing orchestration or warehouse services.
+
+| Component | Current Choice | Rationale |
+| --- | --- | --- |
+| Entrez client | Python standard library HTTP calls | Keeps the API mechanics visible while the project is still learning the source shape. |
+| Raw storage | Local files under ignored `data/raw/` | Preserves reproducible source responses without committing generated data; API keys are redacted from sidecar metadata. |
+| Bronze preview | CSV under ignored `data/bronze/` | Provides a simple human-readable output before choosing Parquet or database targets. |
+| XML parser | `xml.etree.ElementTree` | Sufficient for the first SRA `efetch` records without adding dependencies. |
+| Tests | Unit tests for search ID parsing and SRA XML parsing | Protects the first behavior without requiring network access in tests. |
+
 ## Data Model
 
 The operational model should preserve one record per source entity at the appropriate layer, while the analytics model should favor conformed dimensions and a small number of clean fact-like tables.

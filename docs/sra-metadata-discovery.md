@@ -194,10 +194,27 @@ The first bronze layer could parse SRA metadata into these candidate tables or r
 
 ## Proposed Next Step
 
-Build a tiny local discovery script that:
+The first implementation now includes a tiny local discovery script that:
 
 1. Calls `esearch` for a limited SRA query.
 2. Calls `efetch` for a small number of returned UIDs.
 3. Saves the raw XML response under an ignored local data path.
 4. Parses a minimal bronze preview with experiment, study, sample, BioProject, BioSample, organism, library, platform, and run fields.
 5. Prints or writes a small Markdown/CSV summary for inspection.
+
+Raw response sidecar metadata redacts `api_key` if it is provided.
+
+Run it locally with:
+
+```powershell
+$env:NCBI_EMAIL = "your-email@example.com"
+nexumics-sra-discovery --retmax 3
+```
+
+Implementation entry point:
+
+```text
+src/nexumics/cli/sra_discovery.py
+```
+
+Raw responses and bronze previews are written under `data/`, which is intentionally ignored by Git.
