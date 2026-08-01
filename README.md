@@ -35,8 +35,6 @@ APIs -> Raw JSON -> Bronze Parquet -> Silver Standardized -> Gold Analytics -> P
 - [Agent Context](AGENTS.md)
 - [Project Brief](docs/project-brief.md)
 - [Technical Design Document](docs/technical-design.md)
-- [Project Brief DOCX](./_render_project_brief/Nexumics_Project_Brief.docx)
-- [Technical Design DOCX](./_render_technical_design/Nexumics_Technical_Design_Document.docx)
 
 ## Repository Structure
 
@@ -44,10 +42,6 @@ APIs -> Raw JSON -> Bronze Parquet -> Silver Standardized -> Gold Analytics -> P
 docs/
   project-brief.md
   technical-design.md
-_render_project_brief/
-  Nexumics_Project_Brief.docx
-_render_technical_design/
-  Nexumics_Technical_Design_Document.docx
 ```
 
 ## Current Status

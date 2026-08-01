@@ -126,6 +126,6 @@ If the core platform is stable, the next natural enhancements are cloud deployme
 
 Those extensions should come after the baseline system is complete so the project keeps a clear story and does not become fragmented.
 
-## Source Artifact
+## Versioned Source
 
-The editable DOCX version is stored at [`../_render_technical_design/Nexumics_Technical_Design_Document.docx`](../_render_technical_design/Nexumics_Technical_Design_Document.docx).
+This Markdown file is the repository-visible source for the technical design. Local DOCX exports may exist under `_render_technical_design/`, but render folders are intentionally kept out of Git.

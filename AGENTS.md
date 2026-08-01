@@ -46,8 +46,8 @@ The repository is in the initial documentation stage. The current artifacts are:
 - `README.md`: project entry point.
 - `docs/project-brief.md`: GitHub-readable project brief.
 - `docs/technical-design.md`: GitHub-readable technical design document.
-- `_render_project_brief/Nexumics_Project_Brief.docx`: editable project brief DOCX.
-- `_render_technical_design/Nexumics_Technical_Design_Document.docx`: editable technical design DOCX.
+
+Local DOCX render/export folders such as `_render_project_brief/` and `_render_technical_design/` are intentionally ignored by Git. Use the Markdown files in `docs/` as the versioned source for repository-visible documentation.
 
 The codebase has not been scaffolded yet.
 
@@ -67,6 +67,7 @@ The codebase has not been scaffolded yet.
 - Prefer small, well-scoped changes that make the project easier to understand.
 - Do not introduce a framework or service unless it supports the planned stack or the user explicitly approves the change.
 - Keep generated artifacts, render outputs, caches, and local environment files out of version control.
+- Keep `_render_*` folders local-only unless the user explicitly changes the publishing policy.
 - When creating code later, include tests for behavior that affects ingestion, transformations, validation, or schema contracts.
 - Keep implementation examples reproducible from a fresh clone.
 

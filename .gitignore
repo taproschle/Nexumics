@@ -1,7 +1,5 @@
 # Render and generated review artifacts
-_render_*/page-*.png
-_render_*/*.pdf
-_render_*/*.log
+_render_*/
 
 # Legacy document location
 Documents/

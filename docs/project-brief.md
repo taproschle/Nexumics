@@ -79,6 +79,6 @@ As a portfolio artifact, Nexumics should communicate technical depth while remai
 | Data refresh cadence | Decide whether the first release should run on a scheduled batch cadence or remain manually triggered. |
 | Cloud path | Determine whether the public repo stays local-first or evolves into a cloud-hosted deployment in a later phase. |
 
-## Source Artifact
+## Versioned Source
 
-The editable DOCX version is stored at [`../_render_project_brief/Nexumics_Project_Brief.docx`](../_render_project_brief/Nexumics_Project_Brief.docx).
+This Markdown file is the repository-visible source for the project brief. Local DOCX exports may exist under `_render_project_brief/`, but render folders are intentionally kept out of Git.
