@@ -59,6 +59,7 @@ The repository is in the initial documentation stage. The current versioned arti
 - `README.md`: project entry point.
 - `AGENTS.md`: public agent context and repository working guidelines.
 - `docs/data-sources.md`: source access strategy and NCBI Entrez decision record.
+- `docs/sra-metadata-discovery.md`: first SRA metadata inspection and design implications.
 - `docs/project-brief.md`: GitHub-readable project brief.
 - `docs/technical-design.md`: GitHub-readable technical design document.
 
@@ -81,6 +82,7 @@ The codebase has not been scaffolded yet.
 - Read `README.md`, `AGENTS.md`, and the relevant files under `docs/` before making project-level decisions.
 - Preserve the lakehouse layering language: raw, bronze, silver, gold.
 - Treat NCBI Entrez E-utilities as the first source access layer unless the user explicitly revisits the decision.
+- Treat SRA metadata discovery as the current first source exploration path.
 - Prefer small, well-scoped changes that make the project easier to understand.
 - Do not introduce a framework or service unless it supports the planned stack or the user explicitly approves the change.
 - Explain meaningful technical decisions in the user conversation before or while implementing them.

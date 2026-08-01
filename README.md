@@ -34,6 +34,7 @@ APIs -> Raw JSON -> Bronze Parquet -> Silver Standardized -> Gold Analytics -> P
 
 - [Agent Context](AGENTS.md)
 - [Data Sources](docs/data-sources.md)
+- [SRA Metadata Discovery](docs/sra-metadata-discovery.md)
 - [Project Brief](docs/project-brief.md)
 - [Technical Design Document](docs/technical-design.md)
 
@@ -42,6 +43,7 @@ APIs -> Raw JSON -> Bronze Parquet -> Silver Standardized -> Gold Analytics -> P
 ```text
 docs/
   data-sources.md
+  sra-metadata-discovery.md
   project-brief.md
   technical-design.md
 ```
