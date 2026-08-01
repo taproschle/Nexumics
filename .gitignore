@@ -1,0 +1,39 @@
+# Render and generated review artifacts
+_render_*/page-*.png
+_render_*/*.pdf
+_render_*/*.log
+
+# Legacy document location
+Documents/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environment and local config
+.env
+.env.*
+!.env.example
+
+# Data and local runtime outputs
+data/
+logs/
+tmp/
+*.log
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
