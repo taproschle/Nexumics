@@ -23,6 +23,7 @@ env/
 .env
 .env.*
 !.env.example
+AGENTS_LOCAL.md
 
 # Data and local runtime outputs
 data/

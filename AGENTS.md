@@ -1,5 +1,7 @@
 # AGENTS.md
 
+This file gives programming agents the context required to continue work on Nexumics without losing the project direction. Read this file and `README.md` before making repository-level decisions.
+
 ## Project Context
 
 Nexumics is an open-source data engineering project for ingesting, standardizing, and serving public omics metadata through a lakehouse-style architecture.
@@ -8,9 +10,20 @@ The project is intended to work as a production-minded portfolio project. It sho
 
 ## Documentation Language
 
-All project-facing documentation must be written in English.
+All repository-facing documentation must be written in English.
 
-Spanish can be used in user conversation when the user writes in Spanish, but repository files, comments intended for maintainers, README content, architecture notes, and technical documentation should stay in English unless the user explicitly requests otherwise.
+Spanish can be used in user conversation when the user writes in Spanish, but files intended for GitHub, maintainers, architecture notes, technical documentation, code comments, commit messages, and issue-style notes should stay in English unless the user explicitly changes that policy.
+
+## Collaboration Style
+
+The user wants to build this project step by step while understanding the decisions being made. Agents should explain meaningful implementation choices, especially:
+
+- Why a tool, library, framework, or folder structure is being introduced.
+- What tradeoffs were considered.
+- How the change fits the lakehouse/data engineering goals.
+- What should be discussed with the user before proceeding.
+
+Do not rush through large scaffolding changes without context. Prefer small, understandable increments that the user can follow and review.
 
 ## High-Level Architecture
 
@@ -41,9 +54,10 @@ APIs -> Raw JSON -> Bronze Parquet -> Silver Standardized -> Gold Analytics -> P
 
 ## Repository Status
 
-The repository is in the initial documentation stage. The current artifacts are:
+The repository is in the initial documentation stage. The current versioned artifacts are:
 
 - `README.md`: project entry point.
+- `AGENTS.md`: public agent context and repository working guidelines.
 - `docs/project-brief.md`: GitHub-readable project brief.
 - `docs/technical-design.md`: GitHub-readable technical design document.
 
@@ -53,7 +67,7 @@ The codebase has not been scaffolded yet.
 
 ## Current Priorities
 
-1. Keep the documentation coherent and fully in English.
+1. Keep public repository documentation coherent and fully in English.
 2. Define the source code structure before adding implementation files.
 3. Establish the ingestion pipeline and raw storage layer.
 4. Add bronze and silver transformations with explicit schemas.
@@ -62,10 +76,11 @@ The codebase has not been scaffolded yet.
 
 ## Agent Working Guidelines
 
-- Read `README.md` and this file before making project-level decisions.
+- Read `README.md`, `AGENTS.md`, and the relevant files under `docs/` before making project-level decisions.
 - Preserve the lakehouse layering language: raw, bronze, silver, gold.
 - Prefer small, well-scoped changes that make the project easier to understand.
 - Do not introduce a framework or service unless it supports the planned stack or the user explicitly approves the change.
+- Explain meaningful technical decisions in the user conversation before or while implementing them.
 - Keep generated artifacts, render outputs, caches, and local environment files out of version control.
 - Keep `_render_*` folders local-only unless the user explicitly changes the publishing policy.
 - When creating code later, include tests for behavior that affects ingestion, transformations, validation, or schema contracts.
@@ -77,6 +92,15 @@ The codebase has not been scaffolded yet.
 - Prefer explicit names over abbreviations unless the abbreviation is standard in the data or omics domain.
 - Keep Markdown concise and navigable.
 - Use ASCII punctuation in repository files unless a source format requires otherwise.
+
+## Local Companion Context
+
+The user may keep an ignored local file named `AGENTS_LOCAL.md` for Spanish learning notes, decision records, and collaboration preferences. That file is intentionally not part of the public GitHub repository.
+
+When a decision affects both public project direction and the user's learning context, update:
+
+- `AGENTS.md` for durable public guidance in English.
+- `AGENTS_LOCAL.md` for Spanish explanations, learning notes, and collaboration context.
 
 ## Open Decisions
 
