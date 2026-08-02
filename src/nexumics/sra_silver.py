@@ -211,6 +211,7 @@ def classify_organism_group(*, organism: str, taxon_id: str, source_dataset: str
         "9598",  # Pan troglodytes
         "9796",  # Equus caballus
         "9823",  # Sus scrofa
+        "9913",  # Bos taurus
         "9940",  # Ovis aries
         "10092",  # Mus musculus domesticus
         "10116",  # Rattus norvegicus
@@ -226,6 +227,7 @@ def classify_organism_group(*, organism: str, taxon_id: str, source_dataset: str
     }
     plant_taxon_ids = {
         "4097",  # Nicotiana tabacum
+        "3403",  # Magnolia liliiflora
         "4577",  # Zea mays
         "188998",  # Sinningia aggregata
         "374723",  # Phtheirospermum japonicum
@@ -237,9 +239,47 @@ def classify_organism_group(*, organism: str, taxon_id: str, source_dataset: str
     }
     fungal_taxon_ids = {
         "27291",  # Saccharomyces paradoxus
+        "4932",  # Saccharomyces cerevisiae
     }
     algae_taxon_ids = {
         "44745",  # Haematococcus lacustris
+    }
+    protist_taxon_ids = {
+        "5801",  # Eimeria acervulina
+        "5802",  # Eimeria tenella
+        "5804",  # Eimeria maxima
+        "5806",  # Cryptosporidium
+        "5807",  # Cryptosporidium parvum
+        "5810",  # Toxoplasma
+        "5811",  # Toxoplasma gondii
+        "5821",  # Plasmodium berghei
+        "5823",  # Plasmodium berghei ANKA
+        "5825",  # Plasmodium chabaudi
+        "5833",  # Plasmodium falciparum
+        "5843",  # Plasmodium falciparum NF54
+        "5850",  # Plasmodium knowlesi
+        "5855",  # Plasmodium vivax
+        "5861",  # Plasmodium yoelii
+        "5866",  # Babesia bigemina
+        "5874",  # Theileria annulata
+        "5875",  # Theileria parva
+        "5693",  # Trypanosoma cruzi
+        "29176",  # Neospora caninum
+        "35133",  # Labyrinthula
+        "36329",  # Plasmodium falciparum 3D7
+        "383379",  # Toxoplasma gondii RH
+        "42890",  # Sarcocystis neurona
+        "471275",  # Eimeria stiedae
+        "483139",  # Cystoisospora suis
+        "508771",  # Toxoplasma gondii ME49
+        "1344799",  # Sarcocystis calchasi
+        "2041159",  # Apicomplexa sp.
+        "2605654",  # Selenidium validusae
+        "3135041",  # Devanium robustum
+        "3135043",  # Lunidium laculatum
+        "3135044",  # Lunidium melongena
+        "1973199",  # Plasmodium homocircumflexum
+        "3391652",  # Apicomplexa sp. corallicolid ex Madracis mirabilis
     }
     if taxon_id == "9606" or organism_lower == "homo sapiens":
         return "Eukaryota"
@@ -259,6 +299,45 @@ def classify_organism_group(*, organism: str, taxon_id: str, source_dataset: str
         return "Fungi"
     if taxon_id in algae_taxon_ids:
         return "Viridiplantae"
+    if taxon_id in protist_taxon_ids or any(
+        term in organism_lower
+        for term in (
+            "babesia",
+            "cryptosporidium",
+            "eimeria",
+            "apicomplexa",
+            "amplectina",
+            "anthozoaphila",
+            "labyrinthula",
+            "belladina",
+            "cephaloidophora",
+            "difficilina",
+            "ganymedes",
+            "kinetosphaera",
+            "klossia",
+            "lankesteria",
+            "lecudina",
+            "legerella",
+            "lentusidium",
+            "loxomoprha",
+            "lunidium",
+            "metzidium",
+            "neospora",
+            "paralecudina",
+            "plasmodium",
+            "polyrhabdina",
+            "sarcocystis",
+            "selenidium",
+            "siedleckia",
+            "theileria",
+            "thiriotia",
+            "toxoplasma",
+            "trypanosoma",
+            "trollidium",
+            "urospora",
+        )
+    ):
+        return "Protists"
     if "archaea" in dataset_lower or any(term in organism_lower for term in ("methano", "archae")):
         return "Archaea"
     if "virus" in organism_lower or "viruses-organism" in dataset_lower:
@@ -268,16 +347,38 @@ def classify_organism_group(*, organism: str, taxon_id: str, source_dataset: str
         for term in (
             "escherichia",
             "jejuibacter",
+            "acinetobacter",
+            "bacillus",
+            "burkholderia",
+            "campylobacter",
+            "citrobacter",
+            "enterococcus",
+            "enterobacter",
+            "elizabethkingia",
+            "faecalibacterium",
+            "klebsiella",
+            "legionella",
+            "listeria",
+            "mycobacterium",
+            "proteus",
+            "raoultella",
             "salmonella",
             "pseudomonas",
             "rickettsia",
             "streptococcus",
             "staphylococcus",
+            "vibrio",
         )
     ):
         return "Bacteria"
     if "metagenome" in organism_lower or "metagenomic" in dataset_lower:
         return "Metagenome"
+    if (
+        "long-read" in dataset_lower
+        and organism_lower
+        and organism_lower not in {"blank sample", "synthetic construct", "unidentified"}
+    ):
+        return "Eukaryota"
     return "unknown"
 
 
@@ -301,6 +402,8 @@ def classify_sample_domain(
         return "virus"
     if organism_group in {"Bacteria", "Archaea"}:
         return "microorganism"
+    if organism_group == "Protists":
+        return "protist"
     if "metagenome" in organism_lower or "metagenomic" in dataset_lower or signal["metagenome_present"]:
         return "metagenome"
     if organism_group == "Eukaryota":

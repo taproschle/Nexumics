@@ -54,21 +54,22 @@ APIs -> Raw JSON -> Bronze Parquet -> Silver Standardized -> Gold Analytics -> P
 
 ## Repository Status
 
-The repository is in the initial documentation stage. The current versioned artifacts are:
+The repository now has a working local SRA metadata lake pipeline. The current versioned artifacts are:
 
 - `README.md`: project entry point.
 - `AGENTS.md`: public agent context and repository working guidelines.
 - `docs/data-sources.md`: source access strategy and NCBI Entrez decision record.
 - `docs/sra-metadata-discovery.md`: first SRA metadata inspection and design implications.
-- `docs/sra-data-model.md`: SRA bronze/silver modeling strategy across humans, microorganisms, and environmental samples.
+- `docs/sra-data-model.md`: SRA bronze/silver modeling strategy across humans, animals, plants, fungi, protists, microorganisms, viruses, and environmental/metagenomic samples.
+- `docs/local-sra-pipeline.md`: implemented local rebuild flow from Bronze batches to Silver CSV, Silver Parquet, Gold Parquet, summaries, and quality reports.
 - `docs/project-brief.md`: GitHub-readable project brief.
 - `docs/technical-design.md`: GitHub-readable technical design document.
-- `src/nexumics/`: initial Python package for Entrez access, raw storage, SRA parsing, SRA attribute dictionary rules, SRA attribute profiling, preview combining, and resumable SRA batch ingestion.
+- `src/nexumics/`: Python package for Entrez access, raw storage, SRA parsing, SRA attribute dictionary rules, SRA attribute profiling, Bronze combining, Silver modeling, Parquet export, Gold analytics, quality checks, local pipeline rebuilds, and resumable SRA batch ingestion.
 - `tests/`: unit tests for behavior that does not require network access.
 
 Local DOCX render/export folders such as `_render_project_brief/` and `_render_technical_design/` are intentionally ignored by Git. Use the Markdown files in `docs/` as the versioned source for repository-visible documentation.
 
-The first code scaffold exists and implements a small SRA discovery flow plus a resumable SRA batch ingestion flow using Entrez History.
+The code implements a small SRA discovery flow, a resumable SRA batch ingestion flow using Entrez History, and a full local rebuild command for already-downloaded SRA batch metadata.
 
 ## Current Priorities
 
@@ -77,8 +78,9 @@ The first code scaffold exists and implements a small SRA discovery flow plus a 
 3. Define the source code structure before adding implementation files.
 4. Establish the ingestion pipeline and raw storage layer.
 5. Add bronze and silver transformations with explicit schemas.
-6. Add tests, validation checks, and observability as first-class project concerns.
-7. Publish a first queryable gold layer through PostgreSQL.
+6. Keep tests, validation checks, and observability as first-class project concerns.
+7. Continue improving taxonomy-aware sample classification and attribute normalization as new domains are added.
+8. Publish a first queryable serving layer through PostgreSQL or Metabase after the local Gold layer is stable.
 
 ## Agent Working Guidelines
 
@@ -88,8 +90,10 @@ The first code scaffold exists and implements a small SRA discovery flow plus a 
 - Treat SRA metadata discovery as the current first source exploration path.
 - Keep `nexumics-sra-discovery` small: `esearch` for UIDs, `efetch` for XML, raw local persistence, and bronze CSV previews.
 - Use `nexumics-sra-batch-ingest` for moderate SRA metadata pulls. It should use Entrez History, per-batch raw XML, per-batch bronze CSVs, and a JSONL manifest for resumability.
+- Use `nexumics-build-sra-local-lake` to rebuild local artifacts from existing Bronze batches. This command does not download new data.
 - Do not promote human-specific sample fields such as `age`, `sex`, and `tissue` into the universal SRA model without a flexible attribute strategy.
 - Preserve `SAMPLE_ATTRIBUTES` as flexible key-value bronze records before deriving sample classifications.
+- Keep `sra_sample_classification` conservative and evidence-based. Known sample domains currently include `human`, `animal`, `plant`, `fungi`, `protist`, `microorganism`, `virus`, `metagenome`, and `unknown`.
 - Keep SRA sample attribute normalization and category rules centralized in `src/nexumics/sra_attribute_dictionary.py`.
 - Use `nexumics-profile-sra-attributes` after batch runs to inspect observed attribute names, categories, frequencies, and example values before expanding the dictionary.
 - Prefer small, well-scoped changes that make the project easier to understand.

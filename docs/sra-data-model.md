@@ -215,7 +215,7 @@ Quality checks can also be run independently:
 nexumics-validate-sra-lake
 ```
 
-The quality report is written under `data/quality/sra/`. Current checks verify required Silver files, non-empty unique run/sample identifiers, matching sample/classification counts, required sample attribute fields, allowed sample domains, an upper threshold for `unknown` samples, and required Gold outputs.
+The quality report is written under `data/quality/sra/`. Current checks verify required Silver files, non-empty unique run/sample identifiers, matching sample/classification counts, required sample attribute fields, allowed sample domains, an upper absolute or proportional threshold for `unknown` samples, and required Gold outputs.
 
 ### `sra_sample_classification`
 
@@ -225,9 +225,9 @@ Derived classification table used for cross-domain filtering and analytics.
 | --- | --- |
 | `sample_accession` | Links back to `sra_sample`. |
 | `biosample_accession` | External BioSample accession. |
-| `sample_domain` | Broad domain such as `human`, `animal`, `plant`, `microorganism`, `virus`, `environmental`, `metagenome`, or `unknown`. |
+| `sample_domain` | Broad domain such as `human`, `animal`, `plant`, `fungi`, `protist`, `microorganism`, `virus`, `metagenome`, or `unknown`. |
 | `sample_context` | Context such as `host-associated`, `environmental`, `isolate`, `cell-line`, `tissue`, `clinical`, or `unknown`. |
-| `organism_group` | Taxonomic group such as `Bacteria`, `Archaea`, `Eukaryota`, `Viruses`, or `unknown`. |
+| `organism_group` | Taxonomic group such as `Bacteria`, `Archaea`, `Eukaryota`, `Viridiplantae`, `Fungi`, `Protists`, `Viruses`, `Metagenome`, or `unknown`. |
 | `host_present` | Boolean derived from attributes such as `host`. |
 | `environment_present` | Boolean derived from environmental attribute categories. |
 | `clinical_present` | Boolean derived from clinical attribute categories; interpreted together with sample domain. |
@@ -237,7 +237,7 @@ Derived classification table used for cross-domain filtering and analytics.
 
 The first implementation uses transparent heuristic rules. For example, `Homo sapiens` or taxon `9606` maps to `human`, source datasets containing viral, bacterial, archaeal, fungal, plant, or metagenomic signals help infer broad domains, and attribute categories such as `host`, `environment`, and `clinical` help infer context. Ambiguous fields remain conservative until stronger taxonomy enrichment is added.
 
-After reviewing initially unknown samples, the heuristic rules include a small allowlist of frequent observed taxon IDs for common animals, insects, plants, fungi, algae, and microorganisms. Non-biological controls such as `blank sample` intentionally remain `unknown`.
+After reviewing initially unknown samples, the heuristic rules include a small allowlist of frequent observed taxon IDs for common animals, insects, plants, fungi, algae, protists, and microorganisms. Non-biological controls such as `blank sample` intentionally remain `unknown`.
 
 ## Attribute Classification Strategy
 

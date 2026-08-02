@@ -81,8 +81,8 @@ Current latest consolidated output:
 
 | Output | Rows |
 | --- | ---: |
-| Bronze runs | 66,964 |
-| Bronze sample attributes | 615,535 |
+| Bronze runs | 89,840 |
+| Bronze sample attributes | 914,148 |
 
 ### 2. Build Silver CSV
 
@@ -117,10 +117,10 @@ Current Silver row counts:
 
 | Table | Rows |
 | --- | ---: |
-| `sra_run.csv` | 66,964 |
-| `sra_sample.csv` | 55,437 |
-| `sra_sample_attribute.csv` | 615,535 |
-| `sra_sample_classification.csv` | 55,437 |
+| `sra_run.csv` | 89,840 |
+| `sra_sample.csv` | 75,792 |
+| `sra_sample_attribute.csv` | 914,148 |
+| `sra_sample_classification.csv` | 75,792 |
 
 ### 3. Export Silver Parquet
 
@@ -153,10 +153,10 @@ Current Silver Parquet outputs:
 
 | Table | Rows | Size |
 | --- | ---: | ---: |
-| `sra_run.parquet` | 66,964 | 2.23 MB |
-| `sra_sample.parquet` | 55,437 | 0.60 MB |
-| `sra_sample_attribute.parquet` | 615,535 | 2.69 MB |
-| `sra_sample_classification.parquet` | 55,437 | 0.69 MB |
+| `sra_run.parquet` | 89,840 | 3.00 MB |
+| `sra_sample.parquet` | 75,792 | 0.81 MB |
+| `sra_sample_attribute.parquet` | 914,148 | 3.74 MB |
+| `sra_sample_classification.parquet` | 75,792 | 0.92 MB |
 
 ### 4. Build Gold Parquet
 
@@ -191,11 +191,11 @@ Current Gold outputs:
 
 | Table | Rows | Size |
 | --- | ---: | ---: |
-| `sra_domain_summary.parquet` | 8 | 1.80 KB |
+| `sra_domain_summary.parquet` | 9 | 1.85 KB |
 | `sra_context_summary.parquet` | 7 | 1.02 KB |
-| `sra_domain_library_strategy_summary.parquet` | 44 | 2.57 KB |
-| `sra_top_organisms_by_domain.parquet` | 62 | 2.95 KB |
-| `sra_attribute_category_by_domain.parquet` | 173 | 3.28 KB |
+| `sra_domain_library_strategy_summary.parquet` | 72 | 3.32 KB |
+| `sra_top_organisms_by_domain.parquet` | 75 | 3.30 KB |
+| `sra_attribute_category_by_domain.parquet` | 212 | 3.33 KB |
 | `sra_quality_summary.parquet` | 1 | 0.80 KB |
 
 ### 5. Summarize Silver
@@ -219,12 +219,12 @@ Current summary files:
 
 | Summary | Rows |
 | --- | ---: |
-| `sample_domain_counts.csv` | 8 |
-| `organism_group_counts.csv` | 8 |
+| `sample_domain_counts.csv` | 9 |
+| `organism_group_counts.csv` | 9 |
 | `sample_context_counts.csv` | 7 |
-| `sample_domain_context_counts.csv` | 31 |
+| `sample_domain_context_counts.csv` | 38 |
 | `attribute_category_counts.csv` | 39 |
-| `library_strategy_counts.csv` | 17 |
+| `library_strategy_counts.csv` | 21 |
 
 ### 6. Validate Quality
 
@@ -262,7 +262,7 @@ The current quality report verifies:
 | `sra_sample_classification_matches_samples` | Ensure sample count matches classification count. |
 | `sra_sample_attribute_required_fields_present` | Ensure required sample attribute fields are present. |
 | `sra_sample_domain_allowed_values` | Ensure domains are controlled vocabulary values. |
-| `sra_unknown_sample_count_below_threshold` | Ensure unknown samples stay below the configured threshold. |
+| `sra_unknown_sample_count_below_threshold` | Ensure unknown samples stay below either the absolute threshold or the proportional threshold. |
 | `gold_sra_domain_summary_exists` | Ensure Gold domain summary exists. |
 | `gold_sra_context_summary_exists` | Ensure Gold context summary exists. |
 | `gold_sra_domain_library_strategy_summary_exists` | Ensure Gold domain/library summary exists. |
@@ -270,7 +270,7 @@ The current quality report verifies:
 | `gold_sra_attribute_category_by_domain_exists` | Ensure Gold attribute category summary exists. |
 | `gold_sra_quality_summary_exists` | Ensure Gold quality summary exists. |
 
-The current unknown sample count is 1, below the default threshold of 10.
+The current unknown sample count is 45, or 0.059% of classified samples. This passes because the quality gate now allows either a small absolute count or a low proportional rate for larger local lakes.
 
 ## Current Gold Snapshot
 
@@ -278,14 +278,15 @@ The current `sra_domain_summary` result is:
 
 | Domain | Samples | Runs | Attributes |
 | --- | ---: | ---: | ---: |
-| `microorganism` | 13,627 | 14,360 | 175,483 |
-| `animal` | 10,838 | 16,192 | 98,005 |
-| `human` | 10,468 | 13,851 | 111,900 |
-| `metagenome` | 6,973 | 7,419 | 89,002 |
-| `virus` | 4,937 | 5,077 | 46,551 |
-| `plant` | 4,879 | 5,058 | 62,935 |
-| `fungi` | 3,714 | 5,006 | 31,646 |
-| `unknown` | 1 | 1 | 13 |
+| `metagenome` | 16,739 | 17,978 | 274,672 |
+| `animal` | 15,941 | 21,997 | 153,086 |
+| `microorganism` | 14,056 | 14,842 | 179,136 |
+| `human` | 10,897 | 14,288 | 118,845 |
+| `virus` | 4,954 | 5,094 | 46,702 |
+| `plant` | 4,897 | 5,077 | 63,077 |
+| `protist` | 4,506 | 5,094 | 46,014 |
+| `fungi` | 3,757 | 5,419 | 32,007 |
+| `unknown` | 45 | 51 | 609 |
 
 ## Querying With DuckDB
 

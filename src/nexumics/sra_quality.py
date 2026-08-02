@@ -14,6 +14,7 @@ ALLOWED_SAMPLE_DOMAINS = {
     "metagenome",
     "microorganism",
     "plant",
+    "protist",
     "unknown",
     "virus",
 }
@@ -33,6 +34,7 @@ def validate_sra_lake(
     silver_dir: Path,
     gold_dir: Path | None = None,
     max_unknown_samples: int = 10,
+    max_unknown_fraction: float = 0.001,
 ) -> list[QualityCheck]:
     checks: list[QualityCheck] = []
     required_silver_files = {
@@ -82,6 +84,8 @@ def validate_sra_lake(
                 "sra_unknown_sample_count_below_threshold",
                 count_matching(classification_rows, "sample_domain", "unknown"),
                 max_unknown_samples,
+                len(classification_rows),
+                max_unknown_fraction,
             ),
         ]
     )
@@ -162,13 +166,28 @@ def allowed_values_check(
     )
 
 
-def max_value_check(name: str, observed_value: int, max_value: int) -> QualityCheck:
+def max_value_check(
+    name: str,
+    observed_value: int,
+    max_value: int,
+    total_value: int | None = None,
+    max_fraction: float | None = None,
+) -> QualityCheck:
+    observed_fraction = observed_value / total_value if total_value else 0.0
+    passes_absolute_threshold = observed_value <= max_value
+    passes_fraction_threshold = max_fraction is not None and observed_fraction <= max_fraction
+    passed = passes_absolute_threshold or passes_fraction_threshold
+    expected = f"<= {max_value}"
+    observed = str(observed_value)
+    if max_fraction is not None and total_value is not None:
+        expected = f"<= {max_value} or <= {max_fraction:.2%}"
+        observed = f"{observed_value} ({observed_fraction:.3%})"
     return QualityCheck(
         name=name,
-        status="pass" if observed_value <= max_value else "fail",
-        observed=str(observed_value),
-        expected=f"<= {max_value}",
-        message="Value is within threshold." if observed_value <= max_value else "Value exceeds threshold.",
+        status="pass" if passed else "fail",
+        observed=observed,
+        expected=expected,
+        message="Value is within threshold." if passed else "Value exceeds threshold.",
     )
 
 

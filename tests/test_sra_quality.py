@@ -3,7 +3,7 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from nexumics.sra_quality import validate_sra_lake, write_quality_report
+from nexumics.sra_quality import max_value_check, validate_sra_lake, write_quality_report
 
 
 class SraQualityTests(unittest.TestCase):
@@ -40,6 +40,40 @@ class SraQualityTests(unittest.TestCase):
             failed_checks = {check.name for check in checks if check.status == "fail"}
 
             self.assertIn("sra_sample_domain_allowed_values", failed_checks)
+
+    def test_validate_sra_lake_allows_protist_domain(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            silver_dir = root / "silver"
+            silver_dir.mkdir()
+            self.write_valid_silver_tables(silver_dir, sample_domain="protist")
+
+            checks = validate_sra_lake(silver_dir=silver_dir)
+            failed_checks = {check.name for check in checks if check.status == "fail"}
+
+            self.assertNotIn("sra_sample_domain_allowed_values", failed_checks)
+
+    def test_unknown_threshold_can_pass_by_fraction(self) -> None:
+        check = max_value_check(
+            "sra_unknown_sample_count_below_threshold",
+            observed_value=50,
+            max_value=10,
+            total_value=100_000,
+            max_fraction=0.001,
+        )
+
+        self.assertEqual(check.status, "pass")
+
+    def test_unknown_threshold_fails_when_count_and_fraction_are_high(self) -> None:
+        check = max_value_check(
+            "sra_unknown_sample_count_below_threshold",
+            observed_value=500,
+            max_value=10,
+            total_value=10_000,
+            max_fraction=0.001,
+        )
+
+        self.assertEqual(check.status, "fail")
 
     def test_write_quality_report_writes_rows(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
