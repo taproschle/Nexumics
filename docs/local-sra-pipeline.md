@@ -85,8 +85,8 @@ Current latest consolidated output:
 
 | Output | Rows |
 | --- | ---: |
-| Bronze runs | 97,031 |
-| Bronze sample attributes | 980,764 |
+| Bronze runs | 108,371 |
+| Bronze sample attributes | 1,097,501 |
 
 ### 2. Build Silver CSV
 
@@ -121,10 +121,10 @@ Current Silver row counts:
 
 | Table | Rows |
 | --- | ---: |
-| `sra_run.csv` | 97,031 |
-| `sra_sample.csv` | 82,559 |
-| `sra_sample_attribute.csv` | 980,764 |
-| `sra_sample_classification.csv` | 82,559 |
+| `sra_run.csv` | 108,371 |
+| `sra_sample.csv` | 93,234 |
+| `sra_sample_attribute.csv` | 1,097,501 |
+| `sra_sample_classification.csv` | 93,234 |
 
 ### 3. Update NCBI Taxonomy Reference
 
@@ -160,8 +160,8 @@ Current local reference:
 
 | Output | Rows |
 | --- | ---: |
-| `taxonomy_reference.csv` | 2,941 |
-| `taxonomy-reference-updates.jsonl` | 16 events |
+| `taxonomy_reference.csv` | 3,775 |
+| `taxonomy-reference-updates.jsonl` | 21 events |
 
 ### 4. Export Silver Parquet
 
@@ -194,10 +194,10 @@ Current Silver Parquet outputs:
 
 | Table | Rows | Size |
 | --- | ---: | ---: |
-| `sra_run.parquet` | 97,031 | 3.26 MB |
-| `sra_sample.parquet` | 82,559 | 0.89 MB |
-| `sra_sample_attribute.parquet` | 980,764 | 4.14 MB |
-| `sra_sample_classification.parquet` | 82,559 | 1.02 MB |
+| `sra_run.parquet` | 108,371 | 3.66 MB |
+| `sra_sample.parquet` | 93,234 | 1.01 MB |
+| `sra_sample_attribute.parquet` | 1,097,501 | 4.64 MB |
+| `sra_sample_classification.parquet` | 93,234 | 1.17 MB |
 
 ### 5. Build Gold Parquet
 
@@ -236,7 +236,7 @@ Current Gold outputs:
 | `sra_context_summary.parquet` | 7 | 1.02 KB |
 | `sra_domain_library_strategy_summary.parquet` | 76 | 3.41 KB |
 | `sra_top_organisms_by_domain.parquet` | 75 | 3.30 KB |
-| `sra_attribute_category_by_domain.parquet` | 219 | 3.42 KB |
+| `sra_attribute_category_by_domain.parquet` | 222 | 3.43 KB |
 | `sra_quality_summary.parquet` | 1 | 0.80 KB |
 
 ### 6. Summarize Silver
@@ -316,7 +316,7 @@ The current quality report verifies:
 | `gold_sra_attribute_category_by_domain_exists` | Ensure Gold attribute category summary exists. |
 | `gold_sra_quality_summary_exists` | Ensure Gold quality summary exists. |
 
-The current unknown sample count is 56, or 0.068% of classified samples. This passes because the quality gate now allows either a small absolute count or a low proportional rate for larger local lakes.
+The current unknown sample count is 56, or 0.060% of classified samples. This passes because the quality gate now allows either a small absolute count or a low proportional rate for larger local lakes.
 
 ### 8. Load Gold To PostgreSQL
 
@@ -353,9 +353,9 @@ The current `sra_domain_summary` result is:
 
 | Domain | Samples | Runs | Attributes |
 | --- | ---: | ---: | ---: |
-| `metagenome` | 17,504 | 18,743 | 280,353 |
-| `animal` | 15,993 | 22,001 | 154,085 |
-| `microorganism` | 14,081 | 14,867 | 179,407 |
+| `animal` | 21,562 | 28,134 | 211,705 |
+| `metagenome` | 19,863 | 21,203 | 316,930 |
+| `microorganism` | 16,828 | 17,614 | 201,947 |
 | `human` | 11,155 | 14,547 | 121,683 |
 | `plant` | 7,811 | 8,133 | 90,630 |
 | `fungi` | 6,075 | 8,060 | 55,645 |
