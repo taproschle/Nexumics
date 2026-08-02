@@ -52,11 +52,14 @@ src/
     sra_attribute_profile.py
     sra_batch.py
     sra_gold.py
+    sra_local_lake.py
     sra_parser.py
     sra_parquet.py
+    sra_quality.py
     sra_silver.py
     sra_silver_summary.py
     cli/
+      build_sra_local_lake.py
       build_sra_gold.py
       build_sra_silver.py
       combine_sra_bronze.py
@@ -65,6 +68,7 @@ src/
       summarize_sra_silver.py
       sra_batch_ingest.py
       sra_discovery.py
+      validate_sra_lake.py
 sql/
   gold/
     sra/
@@ -207,6 +211,26 @@ data/gold/sra/parquet/
 ```
 
 The first Gold pass creates `sra_domain_summary.parquet`, `sra_context_summary.parquet`, and `sra_domain_library_strategy_summary.parquet`. Versioned SQL queries for these tables live under `sql/gold/sra/`.
+
+Run quality checks against local SRA lake outputs:
+
+```powershell
+nexumics-validate-sra-lake
+```
+
+This writes a CSV quality report under:
+
+```text
+data/quality/sra/
+```
+
+Build the full local SRA lake from existing batch Bronze files:
+
+```powershell
+nexumics-build-sra-local-lake
+```
+
+This runs Bronze consolidation, Silver CSV creation, Silver Parquet export, Gold Parquet creation, Silver summaries, and quality validation in one local pipeline.
 
 Profile observed SRA sample attributes:
 

@@ -189,6 +189,31 @@ Implemented Gold tables:
 
 Versioned SQL queries for Gold outputs live under `sql/gold/sra/`.
 
+## Local Pipeline And Quality Checks
+
+The complete local SRA lake can be rebuilt from existing Bronze batch files with:
+
+```powershell
+nexumics-build-sra-local-lake
+```
+
+This orchestrates:
+
+1. Bronze batch consolidation.
+2. Silver CSV table creation.
+3. Silver Parquet export.
+4. Gold Parquet table creation.
+5. Silver summary CSV generation.
+6. Quality validation.
+
+Quality checks can also be run independently:
+
+```powershell
+nexumics-validate-sra-lake
+```
+
+The quality report is written under `data/quality/sra/`. Current checks verify required Silver files, non-empty unique run/sample identifiers, matching sample/classification counts, required sample attribute fields, allowed sample domains, an upper threshold for `unknown` samples, and required Gold outputs.
+
 ### `sra_sample_classification`
 
 Derived classification table used for cross-domain filtering and analytics.

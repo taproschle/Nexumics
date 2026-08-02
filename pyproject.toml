@@ -12,6 +12,8 @@ dependencies = ["duckdb>=1.0"]
 
 [project.scripts]
 nexumics-sra-discovery = "nexumics.cli.sra_discovery:main"
+nexumics-build-sra-local-lake = "nexumics.cli.build_sra_local_lake:main"
+nexumics-validate-sra-lake = "nexumics.cli.validate_sra_lake:main"
 nexumics-combine-sra-bronze = "nexumics.cli.combine_sra_bronze:main"
 nexumics-build-sra-silver = "nexumics.cli.build_sra_silver:main"
 nexumics-build-sra-gold = "nexumics.cli.build_sra_gold:main"
