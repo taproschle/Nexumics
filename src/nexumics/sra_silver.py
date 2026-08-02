@@ -6,6 +6,8 @@ import csv
 from collections.abc import Iterable
 from pathlib import Path
 
+from nexumics.taxonomy_reference import read_taxonomy_reference
+
 
 SRA_RUN_FIELDS = [
     "run_accession",
@@ -113,6 +115,7 @@ def build_sra_sample_attribute_rows(attribute_rows: Iterable[dict[str, str]]) ->
 def build_sra_sample_classification_rows(
     sample_rows: Iterable[dict[str, str]],
     attribute_rows: Iterable[dict[str, str]],
+    taxonomy_reference: dict[str, dict[str, str]] | None = None,
 ) -> list[dict[str, str]]:
     signals = collect_attribute_signals(attribute_rows)
     rows: list[dict[str, str]] = []
@@ -121,18 +124,24 @@ def build_sra_sample_classification_rows(
         signal = signals.get(sample_accession, empty_attribute_signal())
         organism = sample.get("organism", "")
         source_dataset = sample.get("source_dataset", "")
-        organism_group = classify_organism_group(
-            organism=organism,
-            taxon_id=sample.get("taxon_id", ""),
-            source_dataset=source_dataset,
-        )
-        sample_domain = classify_sample_domain(
-            organism=organism,
-            taxon_id=sample.get("taxon_id", ""),
-            source_dataset=source_dataset,
-            organism_group=organism_group,
-            signal=signal,
-        )
+        taxon_id = sample.get("taxon_id", "")
+        taxonomy_row = taxonomy_reference.get(taxon_id) if taxonomy_reference else None
+        if taxonomy_row and taxonomy_row.get("organism_group") and taxonomy_row.get("sample_domain"):
+            organism_group = taxonomy_row["organism_group"]
+            sample_domain = taxonomy_row["sample_domain"]
+        else:
+            organism_group = classify_organism_group(
+                organism=organism,
+                taxon_id=taxon_id,
+                source_dataset=source_dataset,
+            )
+            sample_domain = classify_sample_domain(
+                organism=organism,
+                taxon_id=taxon_id,
+                source_dataset=source_dataset,
+                organism_group=organism_group,
+                signal=signal,
+            )
         sample_context = classify_sample_context(
             organism=organism,
             source_dataset=source_dataset,
@@ -499,9 +508,15 @@ def build_silver_tables(
     bronze_run_path: Path,
     bronze_attribute_path: Path,
     output_dir: Path,
+    taxonomy_reference_path: Path | None = None,
 ) -> dict[str, int]:
     bronze_run_rows = read_csv_rows(bronze_run_path)
     bronze_attribute_rows = read_csv_rows(bronze_attribute_path)
+    taxonomy_reference = (
+        read_taxonomy_reference(taxonomy_reference_path)
+        if taxonomy_reference_path is not None and taxonomy_reference_path.exists()
+        else None
+    )
 
     run_count = write_csv_rows(
         output_dir / "sra_run.csv",
@@ -524,6 +539,7 @@ def build_silver_tables(
         build_sra_sample_classification_rows(
             build_sra_sample_rows(bronze_run_rows),
             build_sra_sample_attribute_rows(bronze_attribute_rows),
+            taxonomy_reference=taxonomy_reference,
         ),
     )
 

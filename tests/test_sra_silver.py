@@ -358,6 +358,30 @@ class SraSilverTests(unittest.TestCase):
         self.assertEqual(by_sample["SRS_WILDLIFE"]["sample_domain"], "animal")
         self.assertEqual(by_sample["SRS_UNIDENTIFIED"]["sample_domain"], "unknown")
 
+    def test_build_sra_sample_classification_rows_uses_taxonomy_reference(self) -> None:
+        rows = build_sra_sample_classification_rows(
+            [
+                {
+                    "sample_accession": "SRS_TAXONOMY",
+                    "biosample_accession": "SAMN_TAXONOMY",
+                    "organism": "Rare lineage example",
+                    "taxon_id": "12345",
+                    "source_dataset": "example-dataset",
+                    "source_file": "runs.csv",
+                }
+            ],
+            [],
+            taxonomy_reference={
+                "12345": {
+                    "organism_group": "Protists",
+                    "sample_domain": "protist",
+                }
+            },
+        )
+
+        self.assertEqual(rows[0]["organism_group"], "Protists")
+        self.assertEqual(rows[0]["sample_domain"], "protist")
+
     def write_csv(self, path: Path, fieldnames: list[str], rows: list[dict[str, str]]) -> None:
         with path.open("w", encoding="utf-8", newline="") as handle:
             writer = csv.DictWriter(handle, fieldnames=fieldnames)

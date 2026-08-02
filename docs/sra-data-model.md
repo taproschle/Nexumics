@@ -204,10 +204,11 @@ This orchestrates:
 
 1. Bronze batch consolidation.
 2. Silver CSV table creation.
-3. Silver Parquet export.
-4. Gold Parquet table creation.
-5. Silver summary CSV generation.
-6. Quality validation.
+3. Optional local NCBI Taxonomy reference usage during sample classification.
+4. Silver Parquet export.
+5. Gold Parquet table creation.
+6. Silver summary CSV generation.
+7. Quality validation.
 
 Quality checks can also be run independently:
 
@@ -235,9 +236,37 @@ Derived classification table used for cross-domain filtering and analytics.
 | `attribute_category_summary` | Compact count of attribute categories observed for the sample. |
 | `classification_basis` | Short explanation of which fields supported the classification. |
 
-The first implementation uses transparent heuristic rules. For example, `Homo sapiens` or taxon `9606` maps to `human`, source datasets containing viral, bacterial, archaeal, fungal, plant, or metagenomic signals help infer broad domains, and attribute categories such as `host`, `environment`, and `clinical` help infer context. Ambiguous fields remain conservative until stronger taxonomy enrichment is added.
+The classifier first uses the local NCBI Taxonomy reference when `data/reference/ncbi_taxonomy/taxonomy_reference.csv` exists. It then falls back to transparent heuristic rules for missing taxon IDs. For example, `Homo sapiens` or taxon `9606` maps to `human`, taxonomy lineages containing bacterial, archaeal, fungal, plant, protist, viral, or metagenomic signals help infer broad domains, and attribute categories such as `host`, `environment`, and `clinical` help infer context.
 
 After reviewing initially unknown samples, the heuristic rules include a small allowlist of frequent observed taxon IDs for common animals, insects, plants, fungi, algae, protists, and microorganisms. Non-biological controls such as `blank sample` intentionally remain `unknown`.
+
+### `taxonomy_reference`
+
+The local NCBI Taxonomy reference is an incremental CSV table built from observed SRA `taxon_id` values:
+
+```powershell
+nexumics-update-ncbi-taxonomy-reference
+```
+
+Output:
+
+```text
+data/reference/ncbi_taxonomy/taxonomy_reference.csv
+```
+
+This table is a local data artifact and is intentionally ignored by Git. The versioned repository contains the code, schema, tests, and documentation required to rebuild it.
+
+| Field | Notes |
+| --- | --- |
+| `taxon_id` | NCBI Taxonomy identifier observed in SRA samples. |
+| `scientific_name` | Scientific name returned by NCBI Taxonomy. |
+| `rank` | Taxonomic rank for the taxon. |
+| `parent_taxon_id` | Parent taxon ID returned by NCBI. |
+| `lineage` | Human-readable lineage string. |
+| `lineage_taxon_ids` | Pipe-delimited ancestor taxon IDs from `LineageEx`. |
+| `superkingdom`, `kingdom`, `phylum`, `class`, `order`, `family`, `genus`, `species` | Selected lineage levels used for analysis and classification. |
+| `organism_group` | Derived broad taxonomy group. |
+| `sample_domain` | Derived Nexumics sample domain used by Silver classification. |
 
 ## Attribute Classification Strategy
 
@@ -318,11 +347,11 @@ The profile counts each normalized attribute, records its current category, coun
 3. Add title and description fields to the run preview or separated entities.
 4. Add run status/date fields.
 5. Add first-pass `sra_sample_classification` using simple rules.
-6. Later enrich `organism_group` from NCBI Taxonomy instead of relying only on organism text.
+6. Continue improving `organism_group` enrichment from NCBI Taxonomy instead of expanding manual allowlists.
 
 ## Open Questions
 
 1. Should `sra_sample_classification` be generated immediately in bronze preview or only in silver?
 2. Should `BioSampleModel` remain only as an attribute, or also be promoted into `sra_sample`?
 3. Which classification values should be allowed in the first controlled vocabulary?
-4. When should NCBI Taxonomy enrichment be introduced?
+4. Should the taxonomy reference later preserve raw XML and update manifests like the SRA batch ingestion flow?

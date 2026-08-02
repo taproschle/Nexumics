@@ -171,6 +171,21 @@ data/silver/sra/
 
 The first Silver pass creates `sra_run.csv`, `sra_sample.csv`, `sra_sample_attribute.csv`, and `sra_sample_classification.csv`. These files are still local data artifacts and are intentionally ignored by Git.
 
+Update the local NCBI Taxonomy reference from Silver SRA samples:
+
+```powershell
+$env:NCBI_EMAIL = "your-email@example.com"
+nexumics-update-ncbi-taxonomy-reference
+```
+
+This reads unique `taxon_id` values from `data/silver/sra/sra_sample.csv`, fetches only missing IDs from NCBI Taxonomy, and writes:
+
+```text
+data/reference/ncbi_taxonomy/taxonomy_reference.csv
+```
+
+The Silver classifier uses this local reference when it exists, then falls back to transparent heuristic rules for missing taxon IDs.
+
 Summarize local SRA Silver tables:
 
 ```powershell

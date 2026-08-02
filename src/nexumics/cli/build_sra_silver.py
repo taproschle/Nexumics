@@ -18,6 +18,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--bronze-run-path", help="Optional explicit consolidated SRA run CSV.")
     parser.add_argument("--bronze-attribute-path", help="Optional explicit consolidated SRA sample attribute CSV.")
     parser.add_argument("--output-dir", default="data/silver/sra", help="Directory for Silver SRA outputs.")
+    parser.add_argument(
+        "--taxonomy-reference-path",
+        default="data/reference/ncbi_taxonomy/taxonomy_reference.csv",
+        help="Optional local NCBI Taxonomy reference CSV used to improve sample classification.",
+    )
     return parser
 
 
@@ -39,6 +44,7 @@ def main() -> None:
         bronze_run_path=bronze_run_path,
         bronze_attribute_path=bronze_attribute_path,
         output_dir=Path(args.output_dir),
+        taxonomy_reference_path=Path(args.taxonomy_reference_path),
     )
 
     print(f"Bronze run input: {bronze_run_path}")

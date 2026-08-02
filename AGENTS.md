@@ -64,7 +64,7 @@ The repository now has a working local SRA metadata lake pipeline. The current v
 - `docs/local-sra-pipeline.md`: implemented local rebuild flow from Bronze batches to Silver CSV, Silver Parquet, Gold Parquet, summaries, and quality reports.
 - `docs/project-brief.md`: GitHub-readable project brief.
 - `docs/technical-design.md`: GitHub-readable technical design document.
-- `src/nexumics/`: Python package for Entrez access, raw storage, SRA parsing, SRA attribute dictionary rules, SRA attribute profiling, Bronze combining, Silver modeling, Parquet export, Gold analytics, quality checks, local pipeline rebuilds, and resumable SRA batch ingestion.
+- `src/nexumics/`: Python package for Entrez access, raw storage, SRA parsing, SRA attribute dictionary rules, SRA attribute profiling, Bronze combining, local NCBI Taxonomy reference updates, Silver modeling, Parquet export, Gold analytics, quality checks, local pipeline rebuilds, and resumable SRA batch ingestion.
 - `tests/`: unit tests for behavior that does not require network access.
 
 Local DOCX render/export folders such as `_render_project_brief/` and `_render_technical_design/` are intentionally ignored by Git. Use the Markdown files in `docs/` as the versioned source for repository-visible documentation.
@@ -90,10 +90,12 @@ The code implements a small SRA discovery flow, a resumable SRA batch ingestion 
 - Treat SRA metadata discovery as the current first source exploration path.
 - Keep `nexumics-sra-discovery` small: `esearch` for UIDs, `efetch` for XML, raw local persistence, and bronze CSV previews.
 - Use `nexumics-sra-batch-ingest` for moderate SRA metadata pulls. It should use Entrez History, per-batch raw XML, per-batch bronze CSVs, and a JSONL manifest for resumability.
+- Use `nexumics-update-ncbi-taxonomy-reference` after Silver samples exist to update `data/reference/ncbi_taxonomy/taxonomy_reference.csv` from observed `taxon_id` values. This command calls NCBI Taxonomy and should fetch only missing IDs unless `--rebuild` is explicitly used.
 - Use `nexumics-build-sra-local-lake` to rebuild local artifacts from existing Bronze batches. This command does not download new data.
 - Do not promote human-specific sample fields such as `age`, `sex`, and `tissue` into the universal SRA model without a flexible attribute strategy.
 - Preserve `SAMPLE_ATTRIBUTES` as flexible key-value bronze records before deriving sample classifications.
 - Keep `sra_sample_classification` conservative and evidence-based. Known sample domains currently include `human`, `animal`, `plant`, `fungi`, `protist`, `microorganism`, `virus`, `metagenome`, and `unknown`.
+- Prefer lineage-derived classification from the local NCBI Taxonomy reference over adding more manual taxon allowlists. Keep heuristic fallback rules for missing taxon IDs and transparent behavior.
 - Keep SRA sample attribute normalization and category rules centralized in `src/nexumics/sra_attribute_dictionary.py`.
 - Use `nexumics-profile-sra-attributes` after batch runs to inspect observed attribute names, categories, frequencies, and example values before expanding the dictionary.
 - Prefer small, well-scoped changes that make the project easier to understand.

@@ -25,6 +25,7 @@ This runs:
 ```text
 Bronze batches
 -> Bronze combined CSV
+-> existing optional NCBI Taxonomy reference
 -> Silver CSV
 -> Silver Parquet
 -> Gold Parquet
@@ -39,6 +40,7 @@ The command is intended to be the main local rebuild entrypoint once SRA batch d
 ```text
 data/bronze/sra/batches/
   -> data/bronze/sra/combined/
+  -> data/reference/ncbi_taxonomy/
   -> data/silver/sra/
   -> data/silver/sra/parquet/
   -> data/gold/sra/parquet/
@@ -122,7 +124,40 @@ Current Silver row counts:
 | `sra_sample_attribute.csv` | 914,148 |
 | `sra_sample_classification.csv` | 75,792 |
 
-### 3. Export Silver Parquet
+### 3. Update NCBI Taxonomy Reference
+
+```powershell
+nexumics-update-ncbi-taxonomy-reference
+```
+
+This is a networked enrichment command, not part of the local-only rebuild command. Run it after Silver samples exist and before rebuilding Silver classifications when new `taxon_id` values have been downloaded.
+
+Inputs:
+
+```text
+data/silver/sra/sra_sample.csv
+```
+
+Outputs:
+
+```text
+data/reference/ncbi_taxonomy/taxonomy_reference.csv
+```
+
+Purpose:
+
+- Read unique SRA `taxon_id` values from Silver samples.
+- Fetch only missing taxon IDs from NCBI Taxonomy.
+- Preserve a local incremental taxonomy reference table.
+- Improve `sra_sample_classification` by using lineage-derived domains before falling back to heuristics.
+
+Current local reference:
+
+| Output | Rows |
+| --- | ---: |
+| `taxonomy_reference.csv` | 2,714 |
+
+### 4. Export Silver Parquet
 
 ```powershell
 nexumics-export-sra-silver-parquet
@@ -158,7 +193,7 @@ Current Silver Parquet outputs:
 | `sra_sample_attribute.parquet` | 914,148 | 3.74 MB |
 | `sra_sample_classification.parquet` | 75,792 | 0.92 MB |
 
-### 4. Build Gold Parquet
+### 5. Build Gold Parquet
 
 ```powershell
 nexumics-build-sra-gold
@@ -193,12 +228,12 @@ Current Gold outputs:
 | --- | ---: | ---: |
 | `sra_domain_summary.parquet` | 9 | 1.85 KB |
 | `sra_context_summary.parquet` | 7 | 1.02 KB |
-| `sra_domain_library_strategy_summary.parquet` | 72 | 3.32 KB |
+| `sra_domain_library_strategy_summary.parquet` | 73 | 3.33 KB |
 | `sra_top_organisms_by_domain.parquet` | 75 | 3.30 KB |
-| `sra_attribute_category_by_domain.parquet` | 212 | 3.33 KB |
+| `sra_attribute_category_by_domain.parquet` | 210 | 3.31 KB |
 | `sra_quality_summary.parquet` | 1 | 0.80 KB |
 
-### 5. Summarize Silver
+### 6. Summarize Silver
 
 ```powershell
 nexumics-summarize-sra-silver
@@ -222,11 +257,11 @@ Current summary files:
 | `sample_domain_counts.csv` | 9 |
 | `organism_group_counts.csv` | 9 |
 | `sample_context_counts.csv` | 7 |
-| `sample_domain_context_counts.csv` | 38 |
+| `sample_domain_context_counts.csv` | 39 |
 | `attribute_category_counts.csv` | 39 |
 | `library_strategy_counts.csv` | 21 |
 
-### 6. Validate Quality
+### 7. Validate Quality
 
 ```powershell
 nexumics-validate-sra-lake
@@ -270,7 +305,7 @@ The current quality report verifies:
 | `gold_sra_attribute_category_by_domain_exists` | Ensure Gold attribute category summary exists. |
 | `gold_sra_quality_summary_exists` | Ensure Gold quality summary exists. |
 
-The current unknown sample count is 45, or 0.059% of classified samples. This passes because the quality gate now allows either a small absolute count or a low proportional rate for larger local lakes.
+The current unknown sample count is 56, or 0.074% of classified samples. This passes because the quality gate now allows either a small absolute count or a low proportional rate for larger local lakes.
 
 ## Current Gold Snapshot
 
@@ -278,15 +313,15 @@ The current `sra_domain_summary` result is:
 
 | Domain | Samples | Runs | Attributes |
 | --- | ---: | ---: | ---: |
-| `metagenome` | 16,739 | 17,978 | 274,672 |
-| `animal` | 15,941 | 21,997 | 153,086 |
-| `microorganism` | 14,056 | 14,842 | 179,136 |
+| `metagenome` | 16,665 | 17,899 | 273,614 |
+| `animal` | 15,934 | 21,911 | 153,037 |
+| `microorganism` | 14,081 | 14,867 | 179,407 |
 | `human` | 10,897 | 14,288 | 118,845 |
 | `virus` | 4,954 | 5,094 | 46,702 |
-| `plant` | 4,897 | 5,077 | 63,077 |
-| `protist` | 4,506 | 5,094 | 46,014 |
-| `fungi` | 3,757 | 5,419 | 32,007 |
-| `unknown` | 45 | 51 | 609 |
+| `plant` | 4,947 | 5,139 | 63,816 |
+| `protist` | 4,512 | 5,105 | 46,072 |
+| `fungi` | 3,746 | 5,475 | 31,941 |
+| `unknown` | 56 | 62 | 714 |
 
 ## Querying With DuckDB
 
