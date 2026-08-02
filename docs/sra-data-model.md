@@ -154,11 +154,15 @@ The profile counts each normalized attribute, records its current category, coun
 | `age`, `sex`, `disease`, `clinical_*` | `clinical` | Human or clinical study metadata. |
 | `tissue`, `cell_type`, `cell_line` | `host_material` | Tissue or cell source. |
 | `host`, `host_taxid`, `host_disease` | `host` | Host-associated microbial or viral sample. |
-| `strain`, `isolate`, `serovar`, `cultivar` | `organism_identity` | Microbial, viral, plant, or isolate-level identity. |
-| `isolation_source`, `source_material_id` | `source_material` | Source material for isolate or environmental sample. |
-| `geo_loc_name`, `lat_lon`, `collection_date` | `spatiotemporal` | Location and collection metadata. |
+| `strain`, `isolate`, `serovar`, `cultivar`, `scientific_name`, `tax_id`, `mlst` | `organism_identity` | Microbial, viral, plant, or isolate-level identity. |
+| `isolation_source`, `source_material_id`, `source_type`, `sample_type`, `isolation_type` | `source_material` | Source material for isolate or environmental sample. |
+| `geo_loc_name`, `lat_lon`, `collection_date`, `geographic_location_*` | `spatiotemporal` | Location and collection metadata. |
 | `env_biome`, `env_broad_scale`, `env_feature`, `env_local_scale`, `env_material`, `env_medium`, `environmental_sample` | `environment` | Environmental and metagenomic context. |
 | `BioSampleModel` | `schema_hint` | BioSample package/model hint. |
+| `sample_name`, `sample_alias`, `submitter_id`, `title` | `sample_identifier` | Sample-level aliases and submitter identifiers. |
+| `author`, `collected_by`, `sequenced_by`, `project_name`, `INSDC_*`, `ENA_*` | `submission_metadata` | Submitter, sequencing center, project, and archive metadata. |
+| `purpose_of_sampling` | `public_health_surveillance` | Surveillance or monitoring intent, common in pathogen datasets. |
+| `food_*`, `facility_type`, `IFSAC+ Category`, `intended_consumer` | `food_metadata` | Food-source and food-safety context. |
 
 ## Why This Shape Works
 

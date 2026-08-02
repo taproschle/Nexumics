@@ -13,12 +13,23 @@ class SraAttributeDictionaryTests(unittest.TestCase):
         self.assertEqual(normalize_attribute_name("geo loc name"), "geo_loc_name")
         self.assertEqual(normalize_attribute_name("host-body-site"), "host_body_site")
         self.assertEqual(normalize_attribute_name(" env/broad scale "), "env_broad_scale")
+        self.assertEqual(
+            normalize_attribute_name("geographic location (country and/or sea)"),
+            "geographic_location_country_and_or_sea",
+        )
+        self.assertEqual(normalize_attribute_name("IFSAC+ Category"), "ifsac_category")
 
     def test_categorize_attribute(self) -> None:
         self.assertEqual(categorize_attribute("env_biome"), "environment")
         self.assertEqual(categorize_attribute("env_broad_scale"), "environment")
         self.assertEqual(categorize_attribute("env_medium"), "environment")
         self.assertEqual(categorize_attribute("host"), "host")
+        self.assertEqual(categorize_attribute("host_scientific_name"), "host")
+        self.assertEqual(categorize_attribute("source_type"), "source_material")
+        self.assertEqual(categorize_attribute("sample_name"), "sample_identifier")
+        self.assertEqual(categorize_attribute("sequenced_by"), "submission_metadata")
+        self.assertEqual(categorize_attribute("purpose_of_sampling"), "public_health_surveillance")
+        self.assertEqual(categorize_attribute("food_origin"), "food_metadata")
         self.assertEqual(categorize_attribute("clinical_status"), "clinical")
         self.assertEqual(categorize_attribute("unexpected"), "other")
 
@@ -27,4 +38,16 @@ class SraAttributeDictionaryTests(unittest.TestCase):
 
         self.assertIn("age", names)
         self.assertIn("env_broad_scale", names)
-        self.assertEqual(set(ATTRIBUTE_CATEGORY_MAP["host"]), {"host", "host_taxid", "host_disease", "host_body_site"})
+        self.assertIn("source_type", names)
+        self.assertEqual(
+            set(ATTRIBUTE_CATEGORY_MAP["host"]),
+            {
+                "host",
+                "host_body_site",
+                "host_common_name",
+                "host_disease",
+                "host_health_state",
+                "host_scientific_name",
+                "host_taxid",
+            },
+        )
