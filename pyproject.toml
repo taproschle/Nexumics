@@ -12,6 +12,7 @@ dependencies = []
 
 [project.scripts]
 nexumics-sra-discovery = "nexumics.cli.sra_discovery:main"
+nexumics-combine-sra-bronze = "nexumics.cli.combine_sra_bronze:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

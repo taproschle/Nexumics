@@ -45,10 +45,12 @@ APIs -> Raw JSON -> Bronze Parquet -> Silver Standardized -> Gold Analytics -> P
 pyproject.toml
 src/
   nexumics/
+    bronze_combine.py
     entrez.py
     raw_storage.py
     sra_parser.py
     cli/
+      combine_sra_bronze.py
       sra_discovery.py
 tests/
 docs/
@@ -90,6 +92,20 @@ Current bronze outputs:
 data/bronze/sra/sra-bronze-preview-<query>-<timestamp>.csv
 data/bronze/sra/sra-sample-attributes-preview-<query>-<timestamp>.csv
 ```
+
+Combine local SRA bronze previews:
+
+```powershell
+nexumics-combine-sra-bronze
+```
+
+This writes deduplicated combined CSV files under:
+
+```text
+data/bronze/sra/combined/
+```
+
+For sample attributes, the combine command recalculates normalized attribute names and categories with the current parser logic.
 
 ## Current Status
 

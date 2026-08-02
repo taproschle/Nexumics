@@ -227,6 +227,14 @@ data/bronze/sra/sra-bronze-preview-<query>-<timestamp>.csv
 data/bronze/sra/sra-sample-attributes-preview-<query>-<timestamp>.csv
 ```
 
+Local bronze previews can be combined with:
+
+```powershell
+nexumics-combine-sra-bronze
+```
+
+The combined files include `source_file` for traceability and deduplicate rows using natural preview keys. For sample attributes, the combine command recalculates normalized attribute names and categories with the current parser logic so older local previews can benefit from improved classification rules.
+
 ## Multi-Query Discovery Notes
 
 Small local runs have been executed for human RNA-Seq, bacterial WGS, viral WGS, metagenomic, environmental, and host-associated microbiome examples.
