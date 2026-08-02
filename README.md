@@ -53,10 +53,12 @@ src/
     sra_batch.py
     sra_parser.py
     sra_silver.py
+    sra_silver_summary.py
     cli/
       build_sra_silver.py
       combine_sra_bronze.py
       profile_sra_attributes.py
+      summarize_sra_silver.py
       sra_batch_ingest.py
       sra_discovery.py
 tests/
@@ -142,6 +144,20 @@ data/silver/sra/
 ```
 
 The first Silver pass creates `sra_run.csv`, `sra_sample.csv`, `sra_sample_attribute.csv`, and `sra_sample_classification.csv`. These files are still local data artifacts and are intentionally ignored by Git.
+
+Summarize local SRA Silver tables:
+
+```powershell
+nexumics-summarize-sra-silver
+```
+
+This writes compact CSV summaries under:
+
+```text
+data/silver/sra/summary/
+```
+
+Current summaries include sample domains, organism groups, sample contexts, domain/context combinations, attribute categories, and library strategies.
 
 Profile observed SRA sample attributes:
 

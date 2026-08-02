@@ -140,6 +140,14 @@ Implemented tables:
 
 This first pass intentionally stays in CSV and uses only the Python standard library. DuckDB and Parquet should be introduced after the table shapes are reviewed and stable.
 
+Silver summary tables can be generated with:
+
+```powershell
+nexumics-summarize-sra-silver
+```
+
+These compact CSV summaries live under `data/silver/sra/summary/` and provide quick checks for sample domains, organism groups, sample contexts, domain/context combinations, attribute categories, and library strategies. They are intentionally lightweight and should be replaced or complemented by DuckDB SQL once the project moves to Parquet-backed analytics.
+
 ### `sra_sample_classification`
 
 Derived classification table used for cross-domain filtering and analytics.
