@@ -1,11 +1,6 @@
 import unittest
 
-from nexumics.sra_parser import (
-    categorize_attribute,
-    normalize_attribute_name,
-    parse_sra_efetch_xml,
-    parse_sra_sample_attributes,
-)
+from nexumics.sra_parser import parse_sra_efetch_xml, parse_sra_sample_attributes
 
 
 SRA_XML = """<?xml version="1.0" encoding="UTF-8"?>
@@ -97,14 +92,3 @@ class SraParserTests(unittest.TestCase):
         self.assertEqual(records[1].normalized_attribute_name, "geo_loc_name")
         self.assertEqual(records[1].attribute_category, "spatiotemporal")
         self.assertEqual(records[2].attribute_category, "organism_identity")
-
-    def test_normalize_attribute_name(self) -> None:
-        self.assertEqual(normalize_attribute_name("geo loc name"), "geo_loc_name")
-        self.assertEqual(normalize_attribute_name("host-body-site"), "host_body_site")
-
-    def test_categorize_attribute(self) -> None:
-        self.assertEqual(categorize_attribute("env_biome"), "environment")
-        self.assertEqual(categorize_attribute("env_broad_scale"), "environment")
-        self.assertEqual(categorize_attribute("env_medium"), "environment")
-        self.assertEqual(categorize_attribute("host"), "host")
-        self.assertEqual(categorize_attribute("unexpected"), "other")

@@ -7,6 +7,8 @@ import csv
 from pathlib import Path
 import xml.etree.ElementTree as ET
 
+from nexumics.sra_attribute_dictionary import categorize_attribute, normalize_attribute_name
+
 
 @dataclass(frozen=True)
 class SraBronzeRecord:
@@ -134,45 +136,6 @@ def write_sample_attribute_preview(
     records: list[SraSampleAttributeRecord], output_path: Path
 ) -> None:
     _write_records(records, output_path, SraSampleAttributeRecord)
-
-
-def normalize_attribute_name(name: str) -> str:
-    normalized = name.strip().lower()
-    for old, new in ((" ", "_"), ("-", "_"), ("/", "_")):
-        normalized = normalized.replace(old, new)
-    while "__" in normalized:
-        normalized = normalized.replace("__", "_")
-    return normalized.strip("_")
-
-
-def categorize_attribute(normalized_name: str) -> str:
-    if normalized_name in {"age", "sex", "disease"} or normalized_name.startswith("clinical_"):
-        return "clinical"
-    if normalized_name in {"tissue", "cell_type", "cell_line"}:
-        return "host_material"
-    if normalized_name in {"host", "host_taxid", "host_disease", "host_body_site"}:
-        return "host"
-    if normalized_name in {"strain", "isolate", "serovar", "cultivar", "genotype"}:
-        return "organism_identity"
-    if normalized_name in {"isolation_source", "source_material_id"}:
-        return "source_material"
-    if normalized_name in {"geo_loc_name", "lat_lon", "collection_date"}:
-        return "spatiotemporal"
-    if normalized_name in {
-        "env_biome",
-        "env_broad_scale",
-        "env_feature",
-        "env_local_scale",
-        "env_material",
-        "env_medium",
-        "environmental_sample",
-    }:
-        return "environment"
-    if normalized_name == "biosamplemodel":
-        return "schema_hint"
-    if normalized_name in {"biomaterial_provider", "unique_identifier"}:
-        return "administrative"
-    return "other"
 
 
 def _write_records(records: list, output_path: Path, record_type: type) -> None:

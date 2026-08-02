@@ -6,7 +6,7 @@ import csv
 from collections.abc import Callable
 from pathlib import Path
 
-from nexumics.sra_parser import categorize_attribute, normalize_attribute_name
+from nexumics.sra_attribute_dictionary import categorize_attribute, normalize_attribute_name
 
 
 RUN_KEY = ("experiment_accession", "run_accession")

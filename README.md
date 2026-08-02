@@ -48,6 +48,7 @@ src/
     bronze_combine.py
     entrez.py
     raw_storage.py
+    sra_attribute_dictionary.py
     sra_batch.py
     sra_parser.py
     cli/

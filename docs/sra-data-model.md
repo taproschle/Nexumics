@@ -133,6 +133,14 @@ Derived classification table used for cross-domain filtering and analytics.
 
 Sample attributes should first be preserved as raw key-value rows. Silver classification can then derive higher-level categories from observed attributes.
 
+The current normalization and categorization rules live in:
+
+```text
+src/nexumics/sra_attribute_dictionary.py
+```
+
+The parser and combine command both use this module so classification behavior stays consistent across new XML parses and older local CSV recombination.
+
 | Attribute Pattern | Possible Category | Example |
 | --- | --- | --- |
 | `age`, `sex`, `disease`, `clinical_*` | `clinical` | Human or clinical study metadata. |
