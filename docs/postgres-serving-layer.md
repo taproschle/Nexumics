@@ -56,6 +56,14 @@ gold_sra
 
 The load is idempotent at table level: tables are created if needed, truncated, and reloaded from the current Gold Parquet files.
 
+To explore the serving layer visually, start Metabase:
+
+```powershell
+docker compose up -d postgres metabase
+```
+
+See `docs/metabase-dashboarding.md` for setup details.
+
 ## Published Tables
 
 | PostgreSQL table | Source Parquet |

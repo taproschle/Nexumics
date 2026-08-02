@@ -249,6 +249,20 @@ PostgreSQL-ready SQL examples live under:
 sql/postgres/gold_sra/
 ```
 
+Start Metabase for local dashboard exploration:
+
+```powershell
+docker compose up -d postgres metabase
+```
+
+Then open:
+
+```text
+http://localhost:3001
+```
+
+Metabase should connect to PostgreSQL using host `postgres`, database `nexumics`, user `nexumics`, password `nexumics`, and schema `gold_sra`. See `docs/metabase-dashboarding.md`.
+
 Run quality checks against local SRA lake outputs:
 
 ```powershell
