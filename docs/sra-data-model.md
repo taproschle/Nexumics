@@ -141,6 +141,14 @@ src/nexumics/sra_attribute_dictionary.py
 
 The parser and combine command both use this module so classification behavior stays consistent across new XML parses and older local CSV recombination.
 
+Observed attributes can be profiled with:
+
+```powershell
+nexumics-profile-sra-attributes
+```
+
+The profile counts each normalized attribute, records its current category, counts distinct values, and includes sample values. This gives a data-driven way to improve the dictionary instead of guessing categories upfront.
+
 | Attribute Pattern | Possible Category | Example |
 | --- | --- | --- |
 | `age`, `sex`, `disease`, `clinical_*` | `clinical` | Human or clinical study metadata. |

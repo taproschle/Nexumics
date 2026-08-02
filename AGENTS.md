@@ -63,7 +63,7 @@ The repository is in the initial documentation stage. The current versioned arti
 - `docs/sra-data-model.md`: SRA bronze/silver modeling strategy across humans, microorganisms, and environmental samples.
 - `docs/project-brief.md`: GitHub-readable project brief.
 - `docs/technical-design.md`: GitHub-readable technical design document.
-- `src/nexumics/`: initial Python package for Entrez access, raw storage, SRA parsing, SRA attribute dictionary rules, preview combining, and resumable SRA batch ingestion.
+- `src/nexumics/`: initial Python package for Entrez access, raw storage, SRA parsing, SRA attribute dictionary rules, SRA attribute profiling, preview combining, and resumable SRA batch ingestion.
 - `tests/`: unit tests for behavior that does not require network access.
 
 Local DOCX render/export folders such as `_render_project_brief/` and `_render_technical_design/` are intentionally ignored by Git. Use the Markdown files in `docs/` as the versioned source for repository-visible documentation.
@@ -91,6 +91,7 @@ The first code scaffold exists and implements a small SRA discovery flow plus a 
 - Do not promote human-specific sample fields such as `age`, `sex`, and `tissue` into the universal SRA model without a flexible attribute strategy.
 - Preserve `SAMPLE_ATTRIBUTES` as flexible key-value bronze records before deriving sample classifications.
 - Keep SRA sample attribute normalization and category rules centralized in `src/nexumics/sra_attribute_dictionary.py`.
+- Use `nexumics-profile-sra-attributes` after batch runs to inspect observed attribute names, categories, frequencies, and example values before expanding the dictionary.
 - Prefer small, well-scoped changes that make the project easier to understand.
 - Do not introduce a framework or service unless it supports the planned stack or the user explicitly approves the change.
 - Explain meaningful technical decisions in the user conversation before or while implementing them.

@@ -49,10 +49,12 @@ src/
     entrez.py
     raw_storage.py
     sra_attribute_dictionary.py
+    sra_attribute_profile.py
     sra_batch.py
     sra_parser.py
     cli/
       combine_sra_bronze.py
+      profile_sra_attributes.py
       sra_batch_ingest.py
       sra_discovery.py
 tests/
@@ -124,6 +126,20 @@ data/bronze/sra/combined/
 ```
 
 For sample attributes, the combine command recalculates normalized attribute names and categories with the current parser logic.
+
+Profile observed SRA sample attributes:
+
+```powershell
+nexumics-profile-sra-attributes
+```
+
+This writes a frequency profile under:
+
+```text
+data/profiles/sra/
+```
+
+Use this profile to decide which observed attributes should be added to the dictionary or promoted later into silver models.
 
 ## Current Status
 
