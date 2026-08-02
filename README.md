@@ -87,8 +87,8 @@ The command writes raw Entrez responses and a bronze CSV preview under `data/`, 
 Current bronze outputs:
 
 ```text
-data/bronze/sra/sra-bronze-preview-<timestamp>.csv
-data/bronze/sra/sra-sample-attributes-preview-<timestamp>.csv
+data/bronze/sra/sra-bronze-preview-<query>-<timestamp>.csv
+data/bronze/sra/sra-sample-attributes-preview-<query>-<timestamp>.csv
 ```
 
 ## Current Status

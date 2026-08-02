@@ -223,6 +223,37 @@ Raw responses and bronze previews are written under `data/`, which is intentiona
 Current bronze outputs:
 
 ```text
-data/bronze/sra/sra-bronze-preview-<timestamp>.csv
-data/bronze/sra/sra-sample-attributes-preview-<timestamp>.csv
+data/bronze/sra/sra-bronze-preview-<query>-<timestamp>.csv
+data/bronze/sra/sra-sample-attributes-preview-<query>-<timestamp>.csv
 ```
+
+## Multi-Query Discovery Notes
+
+Small local runs have been executed for human RNA-Seq, bacterial WGS, viral WGS, metagenomic, environmental, and host-associated microbiome examples.
+
+The observed run-level metadata confirms that the current universal fields work across several domains:
+
+| Example Area | Observed Organisms | Observed Library Sources |
+| --- | --- | --- |
+| Human RNA-Seq | `Homo sapiens` | `TRANSCRIPTOMIC` |
+| Bacterial WGS | `Salmonella enterica`, `Listeria monocytogenes`, `Shigella sonnei` | `GENOMIC` |
+| Viral WGS | `Measles morbillivirus`, `Hepatitis C virus subtype 4a` | `GENOMIC`, `VIRAL RNA` |
+| Metagenomic | `fish metagenome`, `human gut metagenome`, `soil metagenome` | `METAGENOMIC` |
+| Environmental | `wastewater metagenome` | `METAGENOMIC` |
+
+The observed sample attributes confirm that the key-value model is needed. Common or useful attributes include:
+
+- `collection_date`
+- `geo_loc_name`
+- `BioSampleModel`
+- `isolation_source`
+- `lat_lon`
+- `env_broad_scale`
+- `env_local_scale`
+- `env_medium`
+- `isolate`
+- `strain`
+- `host_age`
+- `serovar`
+
+Many host-associated microbiome attributes currently fall into `other`, especially diet, lifestyle, health survey, and microbiome-project-specific fields. This is acceptable for bronze. The next modeling step should decide whether to add broader categories such as `host_lifestyle`, `host_health`, `diet`, or `survey_metadata`.

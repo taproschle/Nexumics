@@ -61,11 +61,11 @@ def main() -> None:
     raw_xml_path = write_raw_response(fetch_response, output_dir=raw_dir, stem=fetch_stem, extension="xml")
 
     records = parse_sra_efetch_xml(fetch_response.text)
-    preview_path = bronze_dir / f"sra-bronze-preview-{timestamp}.csv"
+    preview_path = bronze_dir / f"sra-bronze-preview-{query_slug}-{timestamp}.csv"
     write_bronze_preview(records, preview_path)
 
     sample_attributes = parse_sra_sample_attributes(fetch_response.text)
-    attributes_path = bronze_dir / f"sra-sample-attributes-preview-{timestamp}.csv"
+    attributes_path = bronze_dir / f"sra-sample-attributes-preview-{query_slug}-{timestamp}.csv"
     write_sample_attribute_preview(sample_attributes, attributes_path)
 
     print(f"SRA UIDs: {', '.join(ids)}")
