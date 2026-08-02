@@ -65,6 +65,16 @@ class SraAttributeDictionaryTests(unittest.TestCase):
         self.assertEqual(categorize_attribute("samp_collect_device"), "sample_processing")
         self.assertEqual(categorize_attribute("sample_lysis_method"), "sample_processing")
         self.assertEqual(categorize_attribute("pig_housing_type"), "animal_husbandry")
+        self.assertEqual(categorize_attribute("gap_accession"), "controlled_access_metadata")
+        self.assertEqual(categorize_attribute("dev_stage"), "developmental_stage")
+        self.assertEqual(categorize_attribute("plant_structure"), "plant_metadata")
+        self.assertEqual(categorize_attribute("study_disease"), "clinical")
+        self.assertEqual(categorize_attribute("body_site"), "host_material")
+        self.assertEqual(categorize_attribute("filename"), "sequencing_metadata")
+        self.assertEqual(categorize_attribute("fastq_r1"), "sequencing_metadata")
+        self.assertEqual(categorize_attribute("clade"), "organism_identity")
+        self.assertEqual(categorize_attribute("habitat"), "environment")
+        self.assertEqual(categorize_attribute("microbial_biomass_meth"), "fungal_metadata")
         self.assertEqual(categorize_attribute("clinical_status"), "clinical")
         self.assertEqual(categorize_attribute("unexpected"), "other")
 
@@ -90,11 +100,16 @@ class SraAttributeDictionaryTests(unittest.TestCase):
                 "host_disease_outcome",
                 "host_habitat",
                 "host_health_state",
+                "host_genotype",
                 "host_raw_meat_feeding",
+                "host_length",
+                "host_life_stage",
+                "host_phenotype",
                 "host_scientific_name",
                 "host_sex",
                 "host_subject_id",
                 "host_taxid",
+                "host_tot_mass",
                 "lab_host",
                 "specific_host",
             },

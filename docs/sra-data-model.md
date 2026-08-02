@@ -182,6 +182,10 @@ The profile counts each normalized attribute, records its current category, coun
 | `statistical_analysis_*`, `taxonomic_annotation_*`, `pcr_primers` | `omics_analysis` | Analysis methods, annotation tools, or assay targets. |
 | `fasting_glucose`, `fasting_insulin`, `homa_ir`, hormone-related fields | `physiology_measurement` | Host physiology or biomarker measurements. |
 | `pig_*`, `breeds`, `weaning_age_days`, `sampling_weight_kg` | `animal_husbandry` | Animal husbandry or livestock context. |
+| `dev_stage`, `developmental_stage`, `plant_developmental_stage`, `lifestage` | `developmental_stage` | Developmental or life-stage metadata. |
+| `plant_*`, `biological_material_*`, `material_source_*`, `ecotype`, `population` | `plant_metadata` | Plant accession, structure, growth, or source metadata. |
+| `gap_*` | `controlled_access_metadata` | dbGaP controlled-access identifiers and consent metadata. |
+| `microbial_biomass_meth`, `sieving`, `soil_type_meth`, fungal enrichment fields | `fungal_metadata` | Fungal, soil, or fungal-enrichment-specific metadata. |
 
 ## Why This Shape Works
 

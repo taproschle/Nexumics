@@ -6,8 +6,38 @@ import re
 
 
 ATTRIBUTE_CATEGORY_MAP: dict[str, frozenset[str]] = {
-    "clinical": frozenset({"age", "sex", "disease"}),
-    "host_material": frozenset({"tissue", "cell_type", "cell_line"}),
+    "clinical": frozenset(
+        {
+            "ad_status",
+            "age",
+            "age_at_diagnosis",
+            "arrayexpress_phenotype",
+            "arrayexpress_sex",
+            "cancer_type",
+            "disease",
+            "disease_stage",
+            "disease_state",
+            "health_state",
+            "infection",
+            "is_tumor",
+            "phenotype",
+            "sex",
+            "study_disease",
+            "subject_is_affected",
+            "tumor_stage",
+        }
+    ),
+    "host_material": frozenset(
+        {
+            "body_site",
+            "cell_line",
+            "cell_subtype",
+            "cell_type",
+            "organism_part",
+            "tissue",
+            "tissue_type",
+        }
+    ),
     "host": frozenset(
         {
             "add_host_info",
@@ -22,11 +52,16 @@ ATTRIBUTE_CATEGORY_MAP: dict[str, frozenset[str]] = {
             "host_habitat",
             "host_health_state",
             "host_age_normalized_years",
+            "host_genotype",
+            "host_length",
+            "host_life_stage",
+            "host_phenotype",
             "host_raw_meat_feeding",
             "host_scientific_name",
             "host_sex",
             "host_subject_id",
             "host_taxid",
+            "host_tot_mass",
             "lab_host",
             "specific_host",
             "host_disease_outcome",
@@ -38,6 +73,7 @@ ATTRIBUTE_CATEGORY_MAP: dict[str, frozenset[str]] = {
             "common_name",
             "cultivar",
             "genotype",
+            "clade",
             "isolate",
             "isolate_host",
             "isolate_name_alias",
@@ -51,6 +87,10 @@ ATTRIBUTE_CATEGORY_MAP: dict[str, frozenset[str]] = {
             "strain",
             "subtype",
             "tax_id",
+            "genus",
+            "ploidy",
+            "subspecific_genetic_lineage_name",
+            "subspecific_genetic_lineage_rank",
             "type_material",
             "virus_identifier",
         }
@@ -73,6 +113,8 @@ ATTRIBUTE_CATEGORY_MAP: dict[str, frozenset[str]] = {
             "source_material_id",
             "source_type",
             "sample_description",
+            "source_name",
+            "isolation_source_non_host_associated",
             "type_details",
             "typedetails",
         }
@@ -99,6 +141,12 @@ ATTRIBUTE_CATEGORY_MAP: dict[str, frozenset[str]] = {
             "state",
             "time",
             "timepoint",
+            "biological_material_geographic_location",
+            "biological_material_latitude",
+            "biological_material_longitude",
+            "material_source_geographic_location",
+            "material_source_latitude",
+            "material_source_longitude",
         }
     ),
     "environment": frozenset(
@@ -113,13 +161,24 @@ ATTRIBUTE_CATEGORY_MAP: dict[str, frozenset[str]] = {
             "env_medium",
             "environmental_medium",
             "environmental_sample",
+            "climate_environment",
+            "habitat",
             "local_environmental_context",
             "soil_type",
             "wastewater_type",
         }
     ),
     "environmental_measurement": frozenset(
-        {"altitude", "depth", "elev", "elevation", "osmolality_mosmkg", "samp_size", "temp"}
+        {
+            "altitude",
+            "depth",
+            "elev",
+            "elevation",
+            "microbial_biomass",
+            "osmolality_mosmkg",
+            "samp_size",
+            "temp",
+        }
     ),
     "schema_hint": frozenset({"biosamplemodel"}),
     "sample_identifier": frozenset(
@@ -150,6 +209,25 @@ ATTRIBUTE_CATEGORY_MAP: dict[str, frozenset[str]] = {
             "unique_id",
             "unique_identifier",
             "origin_sample",
+            "biospecimen_repository_sample_id",
+            "cbp_individual_id",
+            "cbp_sample_id",
+            "donor",
+            "father_id",
+            "field_collection_id",
+            "gal_sample_id",
+            "genbank_nucleotide_accession",
+            "gap_sample_id",
+            "gap_subject_id",
+            "greenhouse_cross_id",
+            "individual",
+            "lab_id",
+            "library_id_source",
+            "mother_id",
+            "submitted_sample_id",
+            "submitted_subject_id",
+            "specimen_id",
+            "tolid",
         }
     ),
     "submission_metadata": frozenset(
@@ -177,6 +255,22 @@ ATTRIBUTE_CATEGORY_MAP: dict[str, frozenset[str]] = {
             "ref_biomaterial",
             "sequenced_by",
             "sequencing_run",
+            "barcoding_center",
+            "checklist",
+            "design_description",
+            "dna_extraction_performed_by",
+            "gal",
+            "dissected_by",
+            "identifier_affiliation",
+            "study_name",
+            "submitter_handle",
+        }
+    ),
+    "controlled_access_metadata": frozenset(
+        {
+            "gap_accession",
+            "gap_consent_code",
+            "gap_consent_short_name",
         }
     ),
     "public_health_surveillance": frozenset(
@@ -199,6 +293,18 @@ ATTRIBUTE_CATEGORY_MAP: dict[str, frozenset[str]] = {
             "filename_1",
             "filename_2",
             "seq_meth",
+            "fastq_r1",
+            "fastq_r2",
+            "filename",
+            "filename2",
+            "filetype",
+            "instrument_model",
+            "library_layout",
+            "library_selection",
+            "library_source",
+            "library_strategy",
+            "library_type",
+            "platform",
             "sequencing_data_link",
             "sequencing_reads_alignment_tool",
             "sequencing_reads_assembly_tool",
@@ -251,6 +357,49 @@ ATTRIBUTE_CATEGORY_MAP: dict[str, frozenset[str]] = {
             "treat",
             "group",
             "treatment_group",
+            "chem_administration",
+            "condition",
+            "growth_condition",
+            "stimulation",
+            "stimulus",
+            "treatment",
+            "study_design",
+            "group_description",
+            "growth_protocol",
+            "isolation_and_growth_condition",
+        }
+    ),
+    "developmental_stage": frozenset(
+        {
+            "dev_stage",
+            "development_stage",
+            "developmental_stage",
+            "lifestage",
+            "plant_developmental_stage",
+            "plant_structure_development_stage",
+        }
+    ),
+    "plant_metadata": frozenset(
+        {
+            "accession_name",
+            "biological_material_altitude",
+            "biological_material_coordinates_uncertainty",
+            "biological_material_id",
+            "biological_material_ploidy",
+            "ecotype",
+            "elevation_m",
+            "height_or_length",
+            "hyb_generation",
+            "material_source_altitude",
+            "material_source_description",
+            "plant_anatomical_entity",
+            "plant_growth_medium",
+            "plant_structure",
+            "population",
+            "roostock",
+            "scion",
+            "vivc_number",
+            "vivc_prime_name",
         }
     ),
     "diet_metadata": frozenset(
@@ -321,6 +470,22 @@ ATTRIBUTE_CATEGORY_MAP: dict[str, frozenset[str]] = {
             "nucleic_acid_extraction_kit_method",
             "nucl_acid_ext_ng_ul",
             "quality_control_trimming_software",
+            "analyte_type",
+            "biological_material_preprocessing",
+            "storage_conditions",
+            "store_cond",
+            "rqn",
+        }
+    ),
+    "fungal_metadata": frozenset(
+        {
+            "biotic_relationship",
+            "enrichment_status",
+            "is_the_sequenced_pathogen_host_associated",
+            "microbial_biomass_meth",
+            "sieving",
+            "soil_type_meth",
+            "spike_in_concentration",
         }
     ),
     "animal_husbandry": frozenset(
