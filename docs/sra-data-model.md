@@ -153,15 +153,21 @@ The profile counts each normalized attribute, records its current category, coun
 | --- | --- | --- |
 | `age`, `sex`, `disease`, `clinical_*` | `clinical` | Human or clinical study metadata. |
 | `tissue`, `cell_type`, `cell_line` | `host_material` | Tissue or cell source. |
-| `host`, `host_taxid`, `host_disease` | `host` | Host-associated microbial or viral sample. |
-| `strain`, `isolate`, `serovar`, `cultivar`, `scientific_name`, `tax_id`, `mlst` | `organism_identity` | Microbial, viral, plant, or isolate-level identity. |
-| `isolation_source`, `source_material_id`, `source_type`, `sample_type`, `isolation_type` | `source_material` | Source material for isolate or environmental sample. |
+| `host`, `host_taxid`, `host_disease`, `host_age`, `host_sex`, `host_subject_id` | `host` | Host-associated microbial or viral sample. |
+| `strain`, `isolate`, `serovar`, `cultivar`, `scientific_name`, `tax_id`, `mlst`, `organism` | `organism_identity` | Microbial, viral, plant, or isolate-level identity. |
+| `isolation_source`, `source_material_id`, `source_type`, `sample_type`, `isolation_type`, `source` | `source_material` | Source material for isolate or environmental sample. |
 | `geo_loc_name`, `lat_lon`, `collection_date`, `geographic_location_*` | `spatiotemporal` | Location and collection metadata. |
 | `env_biome`, `env_broad_scale`, `env_feature`, `env_local_scale`, `env_material`, `env_medium`, `environmental_sample` | `environment` | Environmental and metagenomic context. |
+| `depth`, `altitude`, `elev`, `temp`, `samp_size` | `environmental_measurement` | Physical or environmental measurements. |
 | `BioSampleModel` | `schema_hint` | BioSample package/model hint. |
-| `sample_name`, `sample_alias`, `submitter_id`, `title` | `sample_identifier` | Sample-level aliases and submitter identifiers. |
+| `sample_name`, `sample_alias`, `submitter_id`, `title`, `external_id`, `subject_id` | `sample_identifier` | Sample-level aliases and submitter identifiers. |
 | `author`, `collected_by`, `sequenced_by`, `project_name`, `INSDC_*`, `ENA_*` | `submission_metadata` | Submitter, sequencing center, project, and archive metadata. |
 | `purpose_of_sampling` | `public_health_surveillance` | Surveillance or monitoring intent, common in pathogen datasets. |
+| `mic_*`, `carba_*` | `antimicrobial_resistance` | Antimicrobial susceptibility or resistance-marker metadata. |
+| `mlst_type`, `mlst_scheme`, `pubmlst_scheme`, `sequence_type`, `locus_tag_prefix` | `molecular_typing` | Typing schemes, sequence types, and related identifiers. |
+| `culture_collection`, `passage_history`, `replicate`, `specimen_voucher`, `mating_type` | `culture_metadata` | Culture, voucher, replicate, or passage metadata. |
+| `location_in_facility` | `facility_metadata` | Facility-local sampling or storage context. |
+| `potential_contaminant`, `comment`, `host_description` | `sample_quality` | Quality flags, contamination notes, or descriptive caveats. |
 | `food_*`, `facility_type`, `IFSAC+ Category`, `intended_consumer` | `food_metadata` | Food-source and food-safety context. |
 
 ## Why This Shape Works
