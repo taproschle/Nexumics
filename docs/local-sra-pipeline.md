@@ -176,6 +176,9 @@ Outputs:
 data/gold/sra/parquet/sra_domain_summary.parquet
 data/gold/sra/parquet/sra_context_summary.parquet
 data/gold/sra/parquet/sra_domain_library_strategy_summary.parquet
+data/gold/sra/parquet/sra_top_organisms_by_domain.parquet
+data/gold/sra/parquet/sra_attribute_category_by_domain.parquet
+data/gold/sra/parquet/sra_quality_summary.parquet
 ```
 
 Purpose:
@@ -191,6 +194,9 @@ Current Gold outputs:
 | `sra_domain_summary.parquet` | 8 | 1.80 KB |
 | `sra_context_summary.parquet` | 7 | 1.02 KB |
 | `sra_domain_library_strategy_summary.parquet` | 44 | 2.57 KB |
+| `sra_top_organisms_by_domain.parquet` | 62 | 2.95 KB |
+| `sra_attribute_category_by_domain.parquet` | 173 | 3.28 KB |
+| `sra_quality_summary.parquet` | 1 | 0.80 KB |
 
 ### 5. Summarize Silver
 
@@ -236,8 +242,8 @@ Current result:
 
 | Metric | Count |
 | --- | ---: |
-| Quality checks | 14 |
-| Passed | 14 |
+| Quality checks | 17 |
+| Passed | 17 |
 | Failed | 0 |
 
 ## Current Quality Checks
@@ -260,6 +266,9 @@ The current quality report verifies:
 | `gold_sra_domain_summary_exists` | Ensure Gold domain summary exists. |
 | `gold_sra_context_summary_exists` | Ensure Gold context summary exists. |
 | `gold_sra_domain_library_strategy_summary_exists` | Ensure Gold domain/library summary exists. |
+| `gold_sra_top_organisms_by_domain_exists` | Ensure Gold top organisms summary exists. |
+| `gold_sra_attribute_category_by_domain_exists` | Ensure Gold attribute category summary exists. |
+| `gold_sra_quality_summary_exists` | Ensure Gold quality summary exists. |
 
 The current unknown sample count is 1, below the default threshold of 10.
 

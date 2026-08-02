@@ -11,6 +11,9 @@ SRA_GOLD_TABLES = (
     "sra_domain_summary",
     "sra_context_summary",
     "sra_domain_library_strategy_summary",
+    "sra_top_organisms_by_domain",
+    "sra_attribute_category_by_domain",
+    "sra_quality_summary",
 )
 
 
@@ -26,6 +29,9 @@ def build_sra_gold_tables(*, input_dir: Path, output_dir: Path) -> dict[str, int
             "sra_domain_summary": domain_summary_query(),
             "sra_context_summary": context_summary_query(),
             "sra_domain_library_strategy_summary": domain_library_strategy_summary_query(),
+            "sra_top_organisms_by_domain": top_organisms_by_domain_query(),
+            "sra_attribute_category_by_domain": attribute_category_by_domain_query(),
+            "sra_quality_summary": quality_summary_query(),
         }
         for table_name, query in gold_queries.items():
             output_path = output_dir / f"{table_name}.parquet"
@@ -146,6 +152,76 @@ def domain_library_strategy_summary_query() -> str:
             ON r.sample_accession = c.sample_accession
         GROUP BY c.sample_domain, r.library_strategy
         ORDER BY run_count DESC, c.sample_domain, r.library_strategy
+    """
+
+
+def top_organisms_by_domain_query() -> str:
+    return """
+        WITH organism_counts AS (
+            SELECT
+                c.sample_domain,
+                COALESCE(NULLIF(s.organism, ''), 'missing') AS organism,
+                COALESCE(NULLIF(s.taxon_id, ''), 'missing') AS taxon_id,
+                COUNT(*) AS sample_count,
+                ROW_NUMBER() OVER (
+                    PARTITION BY c.sample_domain
+                    ORDER BY COUNT(*) DESC, COALESCE(NULLIF(s.organism, ''), 'missing')
+                ) AS organism_rank
+            FROM sra_sample AS s
+            JOIN sra_sample_classification AS c
+                ON s.sample_accession = c.sample_accession
+            GROUP BY c.sample_domain, organism, taxon_id
+        )
+        SELECT
+            sample_domain,
+            organism_rank,
+            organism,
+            taxon_id,
+            sample_count
+        FROM organism_counts
+        WHERE organism_rank <= 10
+        ORDER BY sample_domain, organism_rank
+    """
+
+
+def attribute_category_by_domain_query() -> str:
+    return """
+        SELECT
+            c.sample_domain,
+            a.attribute_category,
+            COUNT(*) AS attribute_count,
+            COUNT(DISTINCT a.sample_accession) AS sample_count
+        FROM sra_sample_attribute AS a
+        JOIN sra_sample_classification AS c
+            ON a.sample_accession = c.sample_accession
+        GROUP BY c.sample_domain, a.attribute_category
+        ORDER BY c.sample_domain, attribute_count DESC, a.attribute_category
+    """
+
+
+def quality_summary_query() -> str:
+    return """
+        WITH domain_counts AS (
+            SELECT
+                COUNT(*) AS sample_count,
+                SUM(CASE WHEN sample_domain = 'unknown' THEN 1 ELSE 0 END) AS unknown_sample_count
+            FROM sra_sample_classification
+        ),
+        run_counts AS (
+            SELECT COUNT(*) AS run_count
+            FROM sra_run
+        ),
+        attribute_counts AS (
+            SELECT COUNT(*) AS attribute_count
+            FROM sra_sample_attribute
+        )
+        SELECT
+            CAST(domain_counts.sample_count AS BIGINT) AS sample_count,
+            CAST(run_counts.run_count AS BIGINT) AS run_count,
+            CAST(attribute_counts.attribute_count AS BIGINT) AS attribute_count,
+            CAST(domain_counts.unknown_sample_count AS BIGINT) AS unknown_sample_count,
+            CAST(ROUND((domain_counts.unknown_sample_count::DOUBLE / domain_counts.sample_count::DOUBLE) * 100, 4) AS DOUBLE) AS unknown_sample_pct
+        FROM domain_counts, run_counts, attribute_counts
     """
 
 

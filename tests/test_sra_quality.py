@@ -19,6 +19,9 @@ class SraQualityTests(unittest.TestCase):
                 "sra_domain_summary",
                 "sra_context_summary",
                 "sra_domain_library_strategy_summary",
+                "sra_top_organisms_by_domain",
+                "sra_attribute_category_by_domain",
+                "sra_quality_summary",
             ):
                 (gold_dir / f"{table_name}.parquet").write_text("placeholder", encoding="utf-8")
 

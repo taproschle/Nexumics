@@ -76,6 +76,9 @@ sql/
       domain_summary.sql
       context_summary.sql
       domain_library_strategy_summary.sql
+      top_organisms_by_domain.sql
+      attribute_category_by_domain.sql
+      quality_summary.sql
   sra/
     sample_domain_counts.sql
     sample_context_counts.sql
@@ -212,7 +215,7 @@ This reads Silver Parquet files and writes Gold Parquet tables under:
 data/gold/sra/parquet/
 ```
 
-The first Gold pass creates `sra_domain_summary.parquet`, `sra_context_summary.parquet`, and `sra_domain_library_strategy_summary.parquet`. Versioned SQL queries for these tables live under `sql/gold/sra/`.
+The first Gold pass creates domain, context, domain/library strategy, top-organism, attribute-category, and quality summary Parquet tables. Versioned SQL queries for these tables live under `sql/gold/sra/`.
 
 Run quality checks against local SRA lake outputs:
 

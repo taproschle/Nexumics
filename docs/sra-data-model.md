@@ -186,6 +186,9 @@ Implemented Gold tables:
 | `sra_domain_summary.parquet` | One row per `sample_domain`. | Portfolio-level overview of samples, runs, attributes, and major attribute signals by biological domain. |
 | `sra_context_summary.parquet` | One row per `sample_context`. | Overview of clinical, tissue, host-associated, environmental, metagenomic, experimental, and unknown contexts. |
 | `sra_domain_library_strategy_summary.parquet` | One row per domain and library strategy. | Shows which sequencing strategies dominate each biological domain. |
+| `sra_top_organisms_by_domain.parquet` | One row per ranked organism within each domain. | Shows the most common organisms in each biological domain. |
+| `sra_attribute_category_by_domain.parquet` | One row per domain and attribute category. | Shows which metadata categories dominate each biological domain. |
+| `sra_quality_summary.parquet` | One row for the current lake snapshot. | Summarizes key quality metrics such as unknown sample count. |
 
 Versioned SQL queries for Gold outputs live under `sql/gold/sra/`.
 

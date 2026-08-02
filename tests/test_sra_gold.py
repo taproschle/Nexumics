@@ -42,8 +42,8 @@ class SraGoldTests(unittest.TestCase):
             self.write_parquet(
                 input_dir / "sra_sample.parquet",
                 [
-                    {"sample_accession": "SRS1", "organism": "Homo sapiens"},
-                    {"sample_accession": "SRS2", "organism": "Escherichia coli"},
+                    {"sample_accession": "SRS1", "organism": "Homo sapiens", "taxon_id": "9606"},
+                    {"sample_accession": "SRS2", "organism": "Escherichia coli", "taxon_id": "562"},
                 ],
             )
             self.write_parquet(
@@ -82,7 +82,17 @@ class SraGoldTests(unittest.TestCase):
 
             counts = build_sra_gold_tables(input_dir=input_dir, output_dir=output_dir)
 
-            self.assertEqual(counts, {table_name: 2 for table_name in SRA_GOLD_TABLES})
+            self.assertEqual(
+                counts,
+                {
+                    "sra_domain_summary": 2,
+                    "sra_context_summary": 2,
+                    "sra_domain_library_strategy_summary": 2,
+                    "sra_top_organisms_by_domain": 2,
+                    "sra_attribute_category_by_domain": 3,
+                    "sra_quality_summary": 1,
+                },
+            )
             for table_name in SRA_GOLD_TABLES:
                 self.assertTrue((output_dir / f"{table_name}.parquet").exists())
 
@@ -93,6 +103,12 @@ class SraGoldTests(unittest.TestCase):
                 [str(output_dir / "sra_domain_summary.parquet")],
             ).fetchall()
             self.assertEqual(domain_rows, [("human", 1, 1, 2), ("microorganism", 1, 1, 1)])
+            quality_rows = connection.execute(
+                "SELECT sample_count, run_count, attribute_count, unknown_sample_count "
+                "FROM read_parquet(?)",
+                [str(output_dir / "sra_quality_summary.parquet")],
+            ).fetchall()
+            self.assertEqual(quality_rows, [(2, 2, 3, 0)])
 
     def write_parquet(self, path: Path, rows: list[dict[str, str]]) -> None:
         import duckdb

@@ -91,6 +91,9 @@ def validate_sra_lake(
             "sra_domain_summary",
             "sra_context_summary",
             "sra_domain_library_strategy_summary",
+            "sra_top_organisms_by_domain",
+            "sra_attribute_category_by_domain",
+            "sra_quality_summary",
         ):
             checks.append(file_exists_check(f"gold_{table_name}_exists", gold_dir / f"{table_name}.parquet"))
 
