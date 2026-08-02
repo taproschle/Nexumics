@@ -48,6 +48,16 @@ class EntrezResponse:
     text: str
 
 
+@dataclass(frozen=True)
+class EntrezSearchHistory:
+    """Parsed ESearch result with Entrez History metadata."""
+
+    count: int
+    query_key: str
+    webenv: str
+    ids: list[str]
+
+
 class EntrezClient:
     """Minimal Entrez client with rate limiting, retries, and raw responses."""
 
@@ -68,16 +78,20 @@ class EntrezClient:
         db: str,
         term: str,
         retmax: int = 20,
+        usehistory: bool = False,
         retmode: str = "json",
     ) -> EntrezResponse:
+        params: dict[str, Any] = {
+            "db": db,
+            "term": term,
+            "retmax": retmax,
+            "retmode": retmode,
+        }
+        if usehistory:
+            params["usehistory"] = "y"
         return self.request(
             "esearch",
-            {
-                "db": db,
-                "term": term,
-                "retmax": retmax,
-                "retmode": retmode,
-            },
+            params,
         )
 
     def efetch(
@@ -94,6 +108,36 @@ class EntrezClient:
             {
                 "db": db,
                 "id": ",".join(ids),
+                "retmode": retmode,
+            },
+        )
+
+    def efetch_history(
+        self,
+        *,
+        db: str,
+        query_key: str,
+        webenv: str,
+        retstart: int,
+        retmax: int,
+        retmode: str = "xml",
+    ) -> EntrezResponse:
+        if retstart < 0:
+            raise ValueError("retstart must be non-negative")
+        if retmax <= 0:
+            raise ValueError("retmax must be positive")
+        if not query_key:
+            raise ValueError("query_key is required")
+        if not webenv:
+            raise ValueError("webenv is required")
+        return self.request(
+            "efetch",
+            {
+                "db": db,
+                "query_key": query_key,
+                "WebEnv": webenv,
+                "retstart": retstart,
+                "retmax": retmax,
                 "retmode": retmode,
             },
         )
@@ -147,3 +191,16 @@ def parse_esearch_ids(response: EntrezResponse) -> list[str]:
     payload = json.loads(response.text)
     idlist = payload.get("esearchresult", {}).get("idlist", [])
     return [str(uid) for uid in idlist]
+
+
+def parse_esearch_history(response: EntrezResponse) -> EntrezSearchHistory:
+    """Extract count and History server handles from an ESearch JSON response."""
+
+    payload = json.loads(response.text)
+    result = payload.get("esearchresult", {})
+    return EntrezSearchHistory(
+        count=int(result.get("count", 0)),
+        query_key=str(result.get("querykey", "")),
+        webenv=str(result.get("webenv", "")),
+        ids=[str(uid) for uid in result.get("idlist", [])],
+    )

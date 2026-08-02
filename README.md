@@ -48,9 +48,11 @@ src/
     bronze_combine.py
     entrez.py
     raw_storage.py
+    sra_batch.py
     sra_parser.py
     cli/
       combine_sra_bronze.py
+      sra_batch_ingest.py
       sra_discovery.py
 tests/
 docs/
@@ -86,6 +88,21 @@ nexumics-sra-discovery --retmax 3
 
 The command writes raw Entrez responses and a bronze CSV preview under `data/`, which is intentionally ignored by Git.
 
+Run a resumable SRA batch ingestion flow:
+
+```powershell
+$env:NCBI_EMAIL = "your-email@example.com"
+nexumics-sra-batch-ingest --query "WGS[All Fields] AND bacteria[Organism]" --max-records 1000 --batch-size 200
+```
+
+For resumable reruns, pass the same job id:
+
+```powershell
+nexumics-sra-batch-ingest --query "WGS[All Fields] AND bacteria[Organism]" --max-records 1000 --batch-size 200 --job-id my-bacteria-test
+```
+
+The batch command uses Entrez History, writes one raw XML file per batch, writes per-batch bronze CSV files, and records batch status under `data/manifests/sra/`.
+
 Current bronze outputs:
 
 ```text
@@ -111,11 +128,11 @@ For sample attributes, the combine command recalculates normalized attribute nam
 
 The repository is in the first SRA metadata discovery stage. The next natural milestones are:
 
-1. Exercise the SRA discovery flow on a small query.
-2. Review the raw XML, run-level bronze CSV, and sample-attribute bronze CSV.
+1. Exercise the resumable SRA batch ingestion flow on a moderate query.
+2. Review the raw batch XML, per-batch bronze CSVs, and manifest.
 3. Decide which SRA fields should be promoted into a first silver schema.
 4. Add stronger validation around parsed bronze records.
-5. Introduce orchestration only after the manual flow is well understood.
+5. Introduce orchestration only after the manual batch flow is well understood.
 
 ## Repository Purpose
 

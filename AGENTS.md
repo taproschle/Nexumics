@@ -63,12 +63,12 @@ The repository is in the initial documentation stage. The current versioned arti
 - `docs/sra-data-model.md`: SRA bronze/silver modeling strategy across humans, microorganisms, and environmental samples.
 - `docs/project-brief.md`: GitHub-readable project brief.
 - `docs/technical-design.md`: GitHub-readable technical design document.
-- `src/nexumics/`: initial Python package for Entrez access, raw storage, and SRA parsing.
+- `src/nexumics/`: initial Python package for Entrez access, raw storage, SRA parsing, preview combining, and resumable SRA batch ingestion.
 - `tests/`: unit tests for behavior that does not require network access.
 
 Local DOCX render/export folders such as `_render_project_brief/` and `_render_technical_design/` are intentionally ignored by Git. Use the Markdown files in `docs/` as the versioned source for repository-visible documentation.
 
-The first code scaffold exists and implements a small SRA discovery flow.
+The first code scaffold exists and implements a small SRA discovery flow plus a resumable SRA batch ingestion flow using Entrez History.
 
 ## Current Priorities
 
@@ -86,7 +86,8 @@ The first code scaffold exists and implements a small SRA discovery flow.
 - Preserve the lakehouse layering language: raw, bronze, silver, gold.
 - Treat NCBI Entrez E-utilities as the first source access layer unless the user explicitly revisits the decision.
 - Treat SRA metadata discovery as the current first source exploration path.
-- Keep the first SRA flow small: `esearch` for UIDs, `efetch` for XML, raw local persistence, and a bronze CSV preview.
+- Keep `nexumics-sra-discovery` small: `esearch` for UIDs, `efetch` for XML, raw local persistence, and bronze CSV previews.
+- Use `nexumics-sra-batch-ingest` for moderate SRA metadata pulls. It should use Entrez History, per-batch raw XML, per-batch bronze CSVs, and a JSONL manifest for resumability.
 - Do not promote human-specific sample fields such as `age`, `sex`, and `tissue` into the universal SRA model without a flexible attribute strategy.
 - Preserve `SAMPLE_ATTRIBUTES` as flexible key-value bronze records before deriving sample classifications.
 - Prefer small, well-scoped changes that make the project easier to understand.

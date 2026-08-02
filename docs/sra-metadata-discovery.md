@@ -235,6 +235,52 @@ nexumics-combine-sra-bronze
 
 The combined files include `source_file` for traceability and deduplicate rows using natural preview keys. For sample attributes, the combine command recalculates normalized attribute names and categories with the current parser logic so older local previews can benefit from improved classification rules.
 
+## Resumable Batch Ingestion
+
+For moderate or large metadata pulls, Nexumics now includes a batch-oriented SRA ingestion command:
+
+```powershell
+$env:NCBI_EMAIL = "your-email@example.com"
+nexumics-sra-batch-ingest --query "WGS[All Fields] AND bacteria[Organism]" --max-records 1000 --batch-size 200
+```
+
+This command uses Entrez History instead of passing long UID lists directly to `efetch`.
+
+The batch flow is:
+
+1. Call `esearch` with `usehistory=y` and `retmax=0`.
+2. Parse `count`, `query_key`, and `WebEnv` from the search response.
+3. Fetch records in `retstart` and `retmax` windows.
+4. Save one raw XML file per batch.
+5. Parse one run-level bronze CSV and one sample-attribute bronze CSV per batch.
+6. Append a JSONL manifest event for each successful or failed batch.
+
+Batch outputs are local-only and intentionally ignored by Git:
+
+```text
+data/raw/sra/<job-id>/
+data/bronze/sra/batches/<query>-<job-id>/
+data/manifests/sra/sra-batch-<query>-<job-id>.jsonl
+```
+
+Use `--job-id` to make a run resumable:
+
+```powershell
+nexumics-sra-batch-ingest --query "WGS[All Fields] AND bacteria[Organism]" --max-records 1000 --batch-size 200 --job-id bacteria-wgs-test
+```
+
+If the manifest already contains successful events for some `retstart` windows, rerunning with the same `--job-id` skips those completed batches.
+
+Recommended first scale-up settings:
+
+| Setting | Suggested Value | Reason |
+| --- | --- | --- |
+| `--max-records` | `1000` | Large enough to expose heterogeneity without making debugging painful. |
+| `--batch-size` | `100` to `200` | Keeps raw XML files reviewable and failures cheap to retry. |
+| `NCBI_API_KEY` | Optional but recommended | Allows a higher official request rate. |
+
+The current implementation still targets metadata, not sequencing reads.
+
 ## Multi-Query Discovery Notes
 
 Small local runs have been executed for human RNA-Seq, bacterial WGS, viral WGS, metagenomic, environmental, and host-associated microbiome examples.
