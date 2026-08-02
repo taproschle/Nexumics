@@ -94,3 +94,21 @@ SELECT 'sra_quality_summary', COUNT(*) FROM gold_sra.sra_quality_summary;
 ```
 
 Current expected row counts are documented in `docs/local-sra-pipeline.md`.
+
+## Versioned PostgreSQL Queries
+
+PostgreSQL-ready SQL files live under:
+
+```text
+sql/postgres/gold_sra/
+```
+
+These queries read directly from PostgreSQL tables such as `gold_sra.sra_domain_summary`.
+
+This is separate from:
+
+```text
+sql/gold/sra/
+```
+
+Those DuckDB-oriented queries read local Parquet files directly.

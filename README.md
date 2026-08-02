@@ -243,6 +243,12 @@ nexumics-load-sra-gold-postgres
 
 This creates and reloads the `gold_sra` schema from `data/gold/sra/parquet/`. See `docs/postgres-serving-layer.md` for table details and verification SQL.
 
+PostgreSQL-ready SQL examples live under:
+
+```text
+sql/postgres/gold_sra/
+```
+
 Run quality checks against local SRA lake outputs:
 
 ```powershell
