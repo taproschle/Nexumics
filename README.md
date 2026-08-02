@@ -52,7 +52,9 @@ src/
     sra_attribute_profile.py
     sra_batch.py
     sra_parser.py
+    sra_silver.py
     cli/
+      build_sra_silver.py
       combine_sra_bronze.py
       profile_sra_attributes.py
       sra_batch_ingest.py
@@ -126,6 +128,20 @@ data/bronze/sra/combined/
 ```
 
 Combined rows include `source_dataset` and `source_file` columns so overlapping queries can be traced back to the local batch folder that produced them. For sample attributes, the combine command recalculates normalized attribute names and categories with the current parser logic.
+
+Build first-pass SRA Silver tables from the latest consolidated Bronze files:
+
+```powershell
+nexumics-build-sra-silver
+```
+
+This writes normalized CSV tables under:
+
+```text
+data/silver/sra/
+```
+
+The first Silver pass creates `sra_run.csv`, `sra_sample.csv`, and `sra_sample_attribute.csv`. These files are still local data artifacts and are intentionally ignored by Git.
 
 Profile observed SRA sample attributes:
 

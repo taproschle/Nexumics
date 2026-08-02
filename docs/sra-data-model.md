@@ -115,6 +115,30 @@ Flexible key-value table for all BioSample/SRA sample attributes.
 
 This table is essential because sample attributes vary strongly across domains.
 
+## First-Pass Silver Implementation
+
+The first implemented Silver step builds three local CSV tables from the latest consolidated Bronze files:
+
+```powershell
+nexumics-build-sra-silver
+```
+
+Outputs are written under:
+
+```text
+data/silver/sra/
+```
+
+Implemented tables:
+
+| Table | Source | Grain |
+| --- | --- | --- |
+| `sra_run.csv` | Consolidated SRA Bronze run rows. | One row per `run_accession`. |
+| `sra_sample.csv` | Consolidated SRA Bronze run rows. | One row per `sample_accession`, falling back to `biosample_accession` if needed. |
+| `sra_sample_attribute.csv` | Consolidated SRA sample attribute rows. | One row per sample, BioSample, normalized attribute, and value. |
+
+This first pass intentionally stays in CSV and uses only the Python standard library. DuckDB and Parquet should be introduced after the table shapes are reviewed and stable.
+
 ### `sra_sample_classification`
 
 Derived classification table used for cross-domain filtering and analytics.

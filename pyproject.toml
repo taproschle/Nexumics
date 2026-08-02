@@ -13,6 +13,7 @@ dependencies = []
 [project.scripts]
 nexumics-sra-discovery = "nexumics.cli.sra_discovery:main"
 nexumics-combine-sra-bronze = "nexumics.cli.combine_sra_bronze:main"
+nexumics-build-sra-silver = "nexumics.cli.build_sra_silver:main"
 nexumics-sra-batch-ingest = "nexumics.cli.sra_batch_ingest:main"
 nexumics-profile-sra-attributes = "nexumics.cli.profile_sra_attributes:main"
 
