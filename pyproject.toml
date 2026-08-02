@@ -23,6 +23,7 @@ nexumics-sra-batch-ingest = "nexumics.cli.sra_batch_ingest:main"
 nexumics-profile-sra-attributes = "nexumics.cli.profile_sra_attributes:main"
 nexumics-update-ncbi-taxonomy-reference = "nexumics.cli.update_ncbi_taxonomy_reference:main"
 nexumics-load-sra-gold-postgres = "nexumics.cli.load_sra_gold_postgres:main"
+nexumics-create-metabase-dashboards = "nexumics.cli.create_metabase_dashboards:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

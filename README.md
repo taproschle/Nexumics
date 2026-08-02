@@ -53,6 +53,7 @@ src/
     entrez.py
     postgres_gold_loader.py
     raw_storage.py
+    metabase_dashboards.py
     sra_attribute_dictionary.py
     sra_attribute_profile.py
     sra_batch.py
@@ -71,6 +72,7 @@ src/
       combine_sra_bronze.py
       export_sra_silver_parquet.py
       load_sra_gold_postgres.py
+      create_metabase_dashboards.py
       profile_sra_attributes.py
       summarize_sra_silver.py
       sra_batch_ingest.py
@@ -272,6 +274,22 @@ http://localhost:3001
 ```
 
 Metabase should connect to PostgreSQL using host `postgres`, database `nexumics`, user `nexumics`, password `nexumics`, and schema `gold_sra`. See `docs/metabase-dashboarding.md`.
+
+Create the first Metabase dashboard collection programmatically:
+
+```powershell
+$env:METABASE_EMAIL = "your-metabase-admin-email@example.com"
+$env:METABASE_PASSWORD = "your-metabase-password"
+nexumics-create-metabase-dashboards
+```
+
+If the shell does not recognize the command yet, reinstall the editable package with `python -m pip install -e .` or run:
+
+```powershell
+python -m nexumics.cli.create_metabase_dashboards
+```
+
+The command creates a `Nexumics SRA Gold` collection with overview, biological diversity, and sequencing strategy dashboards.
 
 Run quality checks against local SRA lake outputs:
 

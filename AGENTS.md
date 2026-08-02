@@ -101,6 +101,7 @@ The code implements a small SRA discovery flow, a resumable SRA batch ingestion 
 - Use `nexumics-build-sra-local-lake` to rebuild local artifacts from existing Bronze batches. This command does not download new data.
 - Use `nexumics-load-sra-gold-postgres` to publish Gold Parquet tables to PostgreSQL under the `gold_sra` schema. PostgreSQL is a serving layer, not the source of truth for raw/Bronze/Silver/Gold files.
 - Use `docker compose up -d postgres metabase` to start the local serving and dashboard stack. In Metabase, connect to PostgreSQL with host `postgres`, not `localhost`, because both services run inside Docker Compose.
+- Use `nexumics-create-metabase-dashboards` to create the first Metabase dashboard collection from versioned definitions. It requires `METABASE_EMAIL` and `METABASE_PASSWORD` for the local Metabase admin user and defaults to `METABASE_URL=http://localhost:3001`.
 - Do not promote human-specific sample fields such as `age`, `sex`, and `tissue` into the universal SRA model without a flexible attribute strategy.
 - Preserve `SAMPLE_ATTRIBUTES` as flexible key-value bronze records before deriving sample classifications.
 - Keep `sra_sample_classification` conservative and evidence-based. Known sample domains currently include `human`, `animal`, `plant`, `fungi`, `protist`, `microorganism`, `virus`, `metagenome`, and `unknown`.

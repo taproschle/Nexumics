@@ -79,6 +79,45 @@ gold_sra.sra_attribute_category_by_domain
 gold_sra.sra_quality_summary
 ```
 
+## Create Dashboards Programmatically
+
+Nexumics includes a small Metabase API helper that creates the first dashboard collection from versioned definitions.
+
+Set your Metabase admin credentials in the current PowerShell session:
+
+```powershell
+$env:METABASE_EMAIL = "your-metabase-admin-email@example.com"
+$env:METABASE_PASSWORD = "your-metabase-password"
+```
+
+Then run:
+
+```powershell
+nexumics-create-metabase-dashboards
+```
+
+If PowerShell does not recognize the command yet, reinstall the editable package with `python -m pip install -e .` or run:
+
+```powershell
+python -m nexumics.cli.create_metabase_dashboards
+```
+
+By default, the command expects:
+
+| Variable | Default |
+| --- | --- |
+| `METABASE_URL` | `http://localhost:3001` |
+| `METABASE_DATABASE_NAME` | `Nexumics Gold` |
+| `METABASE_COLLECTION_NAME` | `Nexumics SRA Gold` |
+
+The command creates:
+
+- `Nexumics Lake Overview`;
+- `Biological Diversity Explorer`;
+- `Sequencing Strategy & Metadata Quality`.
+
+The dashboard cards use native SQL against the `gold_sra` schema. Re-running the command creates a new dashboard collection, which is useful while the dashboard design is still evolving.
+
 ## Local State
 
 Metabase local application state is persisted in the Docker volume:
