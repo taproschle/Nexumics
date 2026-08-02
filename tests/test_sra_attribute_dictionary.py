@@ -26,17 +26,23 @@ class SraAttributeDictionaryTests(unittest.TestCase):
         self.assertEqual(categorize_attribute("host"), "host")
         self.assertEqual(categorize_attribute("host_scientific_name"), "host")
         self.assertEqual(categorize_attribute("host_sex"), "host")
+        self.assertEqual(categorize_attribute("host_raw_meat_feeding"), "host")
         self.assertEqual(categorize_attribute("source_type"), "source_material")
+        self.assertEqual(categorize_attribute("collection_method"), "source_material")
         self.assertEqual(categorize_attribute("source"), "source_material")
         self.assertEqual(categorize_attribute("sample_name"), "sample_identifier")
+        self.assertEqual(categorize_attribute("patient_number"), "sample_identifier")
         self.assertEqual(categorize_attribute("sequenced_by"), "submission_metadata")
         self.assertEqual(categorize_attribute("purpose_of_sampling"), "public_health_surveillance")
         self.assertEqual(categorize_attribute("food_origin"), "food_metadata")
         self.assertEqual(categorize_attribute("mic_meropenem"), "antimicrobial_resistance")
         self.assertEqual(categorize_attribute("sequence_type"), "molecular_typing")
+        self.assertEqual(categorize_attribute("phylogroup"), "molecular_typing")
         self.assertEqual(categorize_attribute("depth"), "environmental_measurement")
         self.assertEqual(categorize_attribute("replicate"), "culture_metadata")
         self.assertEqual(categorize_attribute("location_in_facility"), "facility_metadata")
+        self.assertEqual(categorize_attribute("estimated_size"), "genome_metadata")
+        self.assertEqual(categorize_attribute("pathogenicity"), "pathogen_metadata")
         self.assertEqual(categorize_attribute("potential_contaminant"), "sample_quality")
         self.assertEqual(categorize_attribute("clinical_status"), "clinical")
         self.assertEqual(categorize_attribute("unexpected"), "other")
@@ -58,6 +64,7 @@ class SraAttributeDictionaryTests(unittest.TestCase):
                 "host_common_name",
                 "host_disease",
                 "host_health_state",
+                "host_raw_meat_feeding",
                 "host_scientific_name",
                 "host_sex",
                 "host_subject_id",

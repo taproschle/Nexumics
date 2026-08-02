@@ -8,6 +8,7 @@ frameworks around it.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from http.client import IncompleteRead
 import json
 import time
 from typing import Any
@@ -169,7 +170,7 @@ class EntrezClient:
                         content_type=response.headers.get("Content-Type", ""),
                         text=body,
                     )
-            except (HTTPError, URLError, TimeoutError) as exc:
+            except (HTTPError, URLError, TimeoutError, IncompleteRead) as exc:
                 last_error = exc
                 if attempt == self.config.max_retries:
                     break

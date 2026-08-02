@@ -17,6 +17,7 @@ ATTRIBUTE_CATEGORY_MAP: dict[str, frozenset[str]] = {
             "host_age",
             "host_associated",
             "host_body_product",
+            "host_raw_meat_feeding",
             "host_scientific_name",
             "host_sex",
             "host_subject_id",
@@ -36,6 +37,7 @@ ATTRIBUTE_CATEGORY_MAP: dict[str, frozenset[str]] = {
             "isolate_name_alias",
             "mlst",
             "organism",
+            "original_isolate_name",
             "scientific_name",
             "serovar",
             "serotype",
@@ -52,8 +54,13 @@ ATTRIBUTE_CATEGORY_MAP: dict[str, frozenset[str]] = {
             "isol_growth_condt",
             "isolation_source",
             "isolation_type",
+            "collection_method",
+            "experimental_specimen_type",
+            "local_sampling_context",
             "source",
             "sample_type",
+            "type_details",
+            "typedetails",
             "source_material_id",
             "source_type",
         }
@@ -78,6 +85,7 @@ ATTRIBUTE_CATEGORY_MAP: dict[str, frozenset[str]] = {
             "env_material",
             "env_medium",
             "environmental_sample",
+            "animal_env",
         }
     ),
     "environmental_measurement": frozenset({"altitude", "depth", "elev", "samp_size", "temp"}),
@@ -86,13 +94,18 @@ ATTRIBUTE_CATEGORY_MAP: dict[str, frozenset[str]] = {
         {
             "alias",
             "biosamples",
+            "bioproject_id",
             "external_id",
+            "patient_number",
             "sample_alias",
             "sample_name",
             "sample_title",
+            "sequencing_identifier",
+            "specimen_source_id",
             "subject_id",
             "submitter_id",
             "title",
+            "unique_id",
             "unique_identifier",
         }
     ),
@@ -102,6 +115,7 @@ ATTRIBUTE_CATEGORY_MAP: dict[str, frozenset[str]] = {
             "arrayexpress_species",
             "biomaterial_provider",
             "broker_name",
+            "collecting_institution",
             "collected_by",
             "ena_first_public",
             "ena_last_update",
@@ -121,8 +135,10 @@ ATTRIBUTE_CATEGORY_MAP: dict[str, frozenset[str]] = {
     "public_health_surveillance": frozenset({"purpose_of_sampling"}),
     "antimicrobial_resistance": frozenset({"carba_allel", "mic_meropenem"}),
     "molecular_typing": frozenset(
-        {"locus_tag_prefix", "mlst_scheme", "mlst_type", "pubmlst_scheme", "sequence_type"}
+        {"locus_tag_prefix", "mlst_scheme", "mlst_type", "phylogroup", "pubmlst_scheme", "sequence_type"}
     ),
+    "genome_metadata": frozenset({"estimated_size", "extrachrom_elements"}),
+    "pathogen_metadata": frozenset({"field_diagnosis", "pathogenicity"}),
     "culture_metadata": frozenset(
         {
             "aliqot",
