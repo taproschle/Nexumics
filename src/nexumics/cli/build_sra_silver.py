@@ -46,6 +46,7 @@ def main() -> None:
     print(f"Silver SRA runs: {counts['sra_run']}")
     print(f"Silver SRA samples: {counts['sra_sample']}")
     print(f"Silver SRA sample attributes: {counts['sra_sample_attribute']}")
+    print(f"Silver SRA sample classifications: {counts['sra_sample_classification']}")
     print(f"Output directory: {args.output_dir}")
 
 

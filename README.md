@@ -141,7 +141,7 @@ This writes normalized CSV tables under:
 data/silver/sra/
 ```
 
-The first Silver pass creates `sra_run.csv`, `sra_sample.csv`, and `sra_sample_attribute.csv`. These files are still local data artifacts and are intentionally ignored by Git.
+The first Silver pass creates `sra_run.csv`, `sra_sample.csv`, `sra_sample_attribute.csv`, and `sra_sample_classification.csv`. These files are still local data artifacts and are intentionally ignored by Git.
 
 Profile observed SRA sample attributes:
 

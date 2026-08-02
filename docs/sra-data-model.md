@@ -136,6 +136,7 @@ Implemented tables:
 | `sra_run.csv` | Consolidated SRA Bronze run rows. | One row per `run_accession`. |
 | `sra_sample.csv` | Consolidated SRA Bronze run rows. | One row per `sample_accession`, falling back to `biosample_accession` if needed. |
 | `sra_sample_attribute.csv` | Consolidated SRA sample attribute rows. | One row per sample, BioSample, normalized attribute, and value. |
+| `sra_sample_classification.csv` | Silver samples plus sample attribute signals. | One row per sample with derived domain, organism group, and sample context. |
 
 This first pass intentionally stays in CSV and uses only the Python standard library. DuckDB and Parquet should be introduced after the table shapes are reviewed and stable.
 
@@ -151,7 +152,13 @@ Derived classification table used for cross-domain filtering and analytics.
 | `sample_context` | Context such as `host-associated`, `environmental`, `isolate`, `cell-line`, `tissue`, `clinical`, or `unknown`. |
 | `organism_group` | Taxonomic group such as `Bacteria`, `Archaea`, `Eukaryota`, `Viruses`, or `unknown`. |
 | `host_present` | Boolean derived from attributes such as `host`. |
+| `environment_present` | Boolean derived from environmental attribute categories. |
+| `clinical_present` | Boolean derived from clinical attribute categories; interpreted together with sample domain. |
+| `metagenome_present` | Boolean derived from metagenome assembly attributes. |
+| `attribute_category_summary` | Compact count of attribute categories observed for the sample. |
 | `classification_basis` | Short explanation of which fields supported the classification. |
+
+The first implementation uses transparent heuristic rules. For example, `Homo sapiens` or taxon `9606` maps to `human`, source datasets containing viral, bacterial, archaeal, fungal, plant, or metagenomic signals help infer broad domains, and attribute categories such as `host`, `environment`, and `clinical` help infer context. Ambiguous fields remain conservative until stronger taxonomy enrichment is added.
 
 ## Attribute Classification Strategy
 
