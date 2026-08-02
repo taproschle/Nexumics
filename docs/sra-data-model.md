@@ -148,6 +148,23 @@ nexumics-summarize-sra-silver
 
 These compact CSV summaries live under `data/silver/sra/summary/` and provide quick checks for sample domains, organism groups, sample contexts, domain/context combinations, attribute categories, and library strategies. They are intentionally lightweight and should be replaced or complemented by DuckDB SQL once the project moves to Parquet-backed analytics.
 
+SRA Silver CSV tables can also be exported to Parquet with:
+
+```powershell
+nexumics-export-sra-silver-parquet
+```
+
+This writes:
+
+```text
+data/silver/sra/parquet/sra_run.parquet
+data/silver/sra/parquet/sra_sample.parquet
+data/silver/sra/parquet/sra_sample_attribute.parquet
+data/silver/sra/parquet/sra_sample_classification.parquet
+```
+
+Versioned SQL queries under `sql/sra/` use these Parquet files as the local analytical interface. This is the bridge from file-based Silver outputs toward Gold analytics.
+
 ### `sra_sample_classification`
 
 Derived classification table used for cross-domain filtering and analytics.

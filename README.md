@@ -52,15 +52,25 @@ src/
     sra_attribute_profile.py
     sra_batch.py
     sra_parser.py
+    sra_parquet.py
     sra_silver.py
     sra_silver_summary.py
     cli/
       build_sra_silver.py
       combine_sra_bronze.py
+      export_sra_silver_parquet.py
       profile_sra_attributes.py
       summarize_sra_silver.py
       sra_batch_ingest.py
       sra_discovery.py
+sql/
+  sra/
+    sample_domain_counts.sql
+    sample_context_counts.sql
+    sample_domain_context_counts.sql
+    attribute_category_counts.sql
+    library_strategy_counts.sql
+    domain_library_strategy_counts.sql
 tests/
 docs/
   data-sources.md
@@ -158,6 +168,24 @@ data/silver/sra/summary/
 ```
 
 Current summaries include sample domains, organism groups, sample contexts, domain/context combinations, attribute categories, and library strategies.
+
+Export SRA Silver tables to Parquet with DuckDB:
+
+```powershell
+nexumics-export-sra-silver-parquet
+```
+
+This writes optimized Parquet tables under:
+
+```text
+data/silver/sra/parquet/
+```
+
+The SQL files under `sql/sra/` query these Parquet outputs with DuckDB. For example:
+
+```powershell
+python -c "import duckdb, pathlib; con = duckdb.connect(':memory:'); print(con.execute(pathlib.Path('sql/sra/sample_domain_counts.sql').read_text()).fetchdf())"
+```
 
 Profile observed SRA sample attributes:
 
