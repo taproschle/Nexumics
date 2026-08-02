@@ -14,7 +14,7 @@ The goal is to build a production-minded portfolio project with traceable source
 ## High-Level Architecture
 
 ```text
-APIs -> Raw JSON -> Bronze Parquet -> Silver Standardized -> Gold Analytics -> PostgreSQL -> Metabase
+Source APIs -> Raw -> Bronze -> Silver -> Gold -> PostgreSQL -> Metabase
 ```
 
 ## Planned Stack
@@ -34,9 +34,12 @@ APIs -> Raw JSON -> Bronze Parquet -> Silver Standardized -> Gold Analytics -> P
 
 - [Agent Context](AGENTS.md)
 - [Data Sources](docs/data-sources.md)
+- [Multi-Source Architecture](docs/multi-source-architecture.md)
 - [SRA Metadata Discovery](docs/sra-metadata-discovery.md)
 - [SRA Data Model](docs/sra-data-model.md)
 - [Local SRA Pipeline](docs/local-sra-pipeline.md)
+- [PostgreSQL Serving Layer](docs/postgres-serving-layer.md)
+- [Metabase Dashboarding](docs/metabase-dashboarding.md)
 - [Project Brief](docs/project-brief.md)
 - [Technical Design Document](docs/technical-design.md)
 
@@ -48,6 +51,7 @@ src/
   nexumics/
     bronze_combine.py
     entrez.py
+    postgres_gold_loader.py
     raw_storage.py
     sra_attribute_dictionary.py
     sra_attribute_profile.py
@@ -59,16 +63,19 @@ src/
     sra_quality.py
     sra_silver.py
     sra_silver_summary.py
+    taxonomy_reference.py
     cli/
       build_sra_local_lake.py
       build_sra_gold.py
       build_sra_silver.py
       combine_sra_bronze.py
       export_sra_silver_parquet.py
+      load_sra_gold_postgres.py
       profile_sra_attributes.py
       summarize_sra_silver.py
       sra_batch_ingest.py
       sra_discovery.py
+      update_ncbi_taxonomy_reference.py
       validate_sra_lake.py
 sql/
   gold/
@@ -89,9 +96,12 @@ sql/
 tests/
 docs/
   data-sources.md
+  multi-source-architecture.md
   sra-metadata-discovery.md
   sra-data-model.md
   local-sra-pipeline.md
+  postgres-serving-layer.md
+  metabase-dashboarding.md
   project-brief.md
   technical-design.md
 ```
@@ -299,13 +309,26 @@ Use this profile to decide which observed attributes should be added to the dict
 
 ## Current Status
 
-The repository is in the first SRA metadata discovery stage. The next natural milestones are:
+The repository currently has a working local SRA metadata lake pipeline:
 
-1. Exercise the resumable SRA batch ingestion flow on a moderate query.
-2. Review the raw batch XML, per-batch bronze CSVs, and manifest.
-3. Decide which SRA fields should be promoted into a first silver schema.
-4. Add stronger validation around parsed bronze records.
-5. Introduce orchestration only after the manual batch flow is well understood.
+- resumable SRA batch ingestion;
+- Bronze consolidation;
+- Silver CSV modeling;
+- local NCBI Taxonomy reference updates;
+- Silver Parquet export;
+- Gold Parquet analytical tables;
+- quality validation;
+- PostgreSQL Gold serving layer;
+- Metabase local dashboarding.
+
+The project is now ready to evolve from an SRA-first pipeline toward a modular multi-source architecture. GEO is the likely next pilot source because it can add study, sample, and platform metadata while linking back to SRA records.
+
+The next natural milestones are:
+
+1. Design the first GEO discovery flow without disrupting the working SRA pipeline.
+2. Compare GEO and SRA ingestion needs before extracting shared abstractions.
+3. Keep improving Gold tables and Metabase dashboards over the current SRA lake.
+4. Introduce orchestration only after the manual local pipeline remains stable across more than one source.
 
 ## Repository Purpose
 

@@ -28,7 +28,7 @@ Do not rush through large scaffolding changes without context. Prefer small, und
 ## High-Level Architecture
 
 ```text
-APIs -> Raw JSON -> Bronze Parquet -> Silver Standardized -> Gold Analytics -> PostgreSQL -> Metabase
+Source APIs -> Raw -> Bronze -> Silver -> Gold -> PostgreSQL -> Metabase
 ```
 
 ## Target Data Sources
@@ -59,6 +59,7 @@ The repository now has a working local SRA metadata lake pipeline. The current v
 - `README.md`: project entry point.
 - `AGENTS.md`: public agent context and repository working guidelines.
 - `docs/data-sources.md`: source access strategy and NCBI Entrez decision record.
+- `docs/multi-source-architecture.md`: decision record for evolving Nexumics from an SRA-first pipeline into a modular multi-source metadata platform.
 - `docs/sra-metadata-discovery.md`: first SRA metadata inspection and design implications.
 - `docs/sra-data-model.md`: SRA bronze/silver modeling strategy across humans, animals, plants, fungi, protists, microorganisms, viruses, and environmental/metagenomic samples.
 - `docs/local-sra-pipeline.md`: implemented local rebuild flow from Bronze batches to Silver CSV, Silver Parquet, Gold Parquet, summaries, and quality reports.
@@ -82,7 +83,9 @@ The code implements a small SRA discovery flow, a resumable SRA batch ingestion 
 5. Add bronze and silver transformations with explicit schemas.
 6. Keep tests, validation checks, and observability as first-class project concerns.
 7. Continue improving taxonomy-aware sample classification and attribute normalization as new domains are added.
-8. Publish a first queryable serving layer through PostgreSQL or Metabase after the local Gold layer is stable.
+8. Keep PostgreSQL and Metabase as the first local serving and dashboarding layers over Gold tables.
+9. Evolve from the current SRA-first implementation toward a modular multi-source architecture.
+10. Use GEO as the likely second source pilot before doing any large refactor.
 
 ## Agent Working Guidelines
 
@@ -90,6 +93,8 @@ The code implements a small SRA discovery flow, a resumable SRA batch ingestion 
 - Preserve the lakehouse layering language: raw, bronze, silver, gold.
 - Treat NCBI Entrez E-utilities as the first source access layer unless the user explicitly revisits the decision.
 - Treat SRA metadata discovery as the current first source exploration path.
+- Treat the current SRA implementation as the first source module, not the final project boundary.
+- Do not perform a large SRA refactor only for folder aesthetics. Introduce shared abstractions after a second source, likely GEO, proves what should be generalized.
 - Keep `nexumics-sra-discovery` small: `esearch` for UIDs, `efetch` for XML, raw local persistence, and bronze CSV previews.
 - Use `nexumics-sra-batch-ingest` for moderate SRA metadata pulls. It should use Entrez History, per-batch raw XML, per-batch bronze CSVs, and a JSONL manifest for resumability.
 - Use `nexumics-update-ncbi-taxonomy-reference` after Silver samples exist to update `data/reference/ncbi_taxonomy/taxonomy_reference.csv` from observed `taxon_id` values. This command calls NCBI Taxonomy, should fetch only missing IDs unless `--rebuild` is explicitly used, and should preserve raw XML plus a JSONL manifest under `data/raw/ncbi_taxonomy/` and `data/manifests/ncbi_taxonomy/`.
@@ -109,6 +114,7 @@ The code implements a small SRA discovery flow, a resumable SRA batch ingestion 
 - Keep `_render_*` folders local-only unless the user explicitly changes the publishing policy.
 - When creating code later, include tests for behavior that affects ingestion, transformations, validation, or schema contracts.
 - Keep implementation examples reproducible from a fresh clone.
+- When source expansion decisions are made, update `docs/multi-source-architecture.md`, `AGENTS.md`, and, when helpful for the user learning trail, `AGENTS_LOCAL.md`.
 
 ## Naming And Style
 
@@ -129,7 +135,7 @@ When a decision affects both public project direction and the user's learning co
 ## Open Decisions
 
 - Final source code folder structure.
-- First Entrez database to implement: `sra`, `bioproject`, `biosample`, `gds`, or `geoprofiles`.
 - Initial refresh cadence: manual, scheduled batch, or orchestrated local run.
 - Whether the first user-facing exploration layer should be Metabase only or include a lightweight app later.
 - Whether cloud deployment belongs in the first milestone or a later extension.
+- Exact timing and scope of the first GEO discovery implementation.
