@@ -42,8 +42,29 @@ class SraAttributeDictionaryTests(unittest.TestCase):
         self.assertEqual(categorize_attribute("replicate"), "culture_metadata")
         self.assertEqual(categorize_attribute("location_in_facility"), "facility_metadata")
         self.assertEqual(categorize_attribute("estimated_size"), "genome_metadata")
+        self.assertEqual(categorize_attribute("genome_group"), "genome_metadata")
         self.assertEqual(categorize_attribute("pathogenicity"), "pathogen_metadata")
         self.assertEqual(categorize_attribute("potential_contaminant"), "sample_quality")
+        self.assertEqual(categorize_attribute("gisaid_accession"), "sample_identifier")
+        self.assertEqual(categorize_attribute("purpose_of_sequencing"), "public_health_surveillance")
+        self.assertEqual(categorize_attribute("date_of_sars_cov_2_vaccination"), "vaccination_metadata")
+        self.assertEqual(categorize_attribute("virus_enrich_appr"), "viral_metadata")
+        self.assertEqual(categorize_attribute("virus_enrichment_approach"), "viral_metadata")
+        self.assertEqual(categorize_attribute("definition_for_seropositive_sample"), "serology_metadata")
+        self.assertEqual(categorize_attribute("perturbation"), "experimental_design")
+        self.assertEqual(categorize_attribute("diet_type"), "diet_metadata")
+        self.assertEqual(categorize_attribute("seq_meth"), "sequencing_metadata")
+        self.assertEqual(categorize_attribute("statistical_analysis_tools"), "omics_analysis")
+        self.assertEqual(categorize_attribute("fasting_glucose"), "physiology_measurement")
+        self.assertEqual(categorize_attribute("age_days"), "animal_husbandry")
+        self.assertEqual(categorize_attribute("environmental_medium"), "environment")
+        self.assertEqual(categorize_attribute("environment_biome"), "environment")
+        self.assertEqual(categorize_attribute("ww_sample_type"), "wastewater_surveillance")
+        self.assertEqual(categorize_attribute("bowel_movement_frequency"), "human_survey")
+        self.assertEqual(categorize_attribute("covid_anxious"), "human_survey")
+        self.assertEqual(categorize_attribute("samp_collect_device"), "sample_processing")
+        self.assertEqual(categorize_attribute("sample_lysis_method"), "sample_processing")
+        self.assertEqual(categorize_attribute("pig_housing_type"), "animal_husbandry")
         self.assertEqual(categorize_attribute("clinical_status"), "clinical")
         self.assertEqual(categorize_attribute("unexpected"), "other")
 
@@ -56,13 +77,18 @@ class SraAttributeDictionaryTests(unittest.TestCase):
         self.assertEqual(
             set(ATTRIBUTE_CATEGORY_MAP["host"]),
             {
+                "add_host_info",
                 "host",
                 "host_age",
+                "host_age_normalized_years",
                 "host_associated",
+                "host_behaviour",
                 "host_body_site",
                 "host_body_product",
                 "host_common_name",
                 "host_disease",
+                "host_disease_outcome",
+                "host_habitat",
                 "host_health_state",
                 "host_raw_meat_feeding",
                 "host_scientific_name",

@@ -171,6 +171,17 @@ The profile counts each normalized attribute, records its current category, coun
 | `location_in_facility` | `facility_metadata` | Facility-local sampling or storage context. |
 | `potential_contaminant`, `comment`, `host_description` | `sample_quality` | Quality flags, contamination notes, or descriptive caveats. |
 | `food_*`, `facility_type`, `IFSAC+ Category`, `intended_consumer` | `food_metadata` | Food-source and food-safety context. |
+| `source_uvig`, `virus_enrich_appr`, `virus_enrichment_approach` | `viral_metadata` | Viral enrichment, virome, or viral-specific context. |
+| `date_of_sars_cov_2_vaccination`, `prior_sars_cov_2_vaccination`, `vaccine_received` | `vaccination_metadata` | Vaccination context observed in viral records. |
+| `definition_for_seropositive_sample` | `serology_metadata` | Serology or seropositive case definition metadata. |
+| `ww_*`, `purpose_of_ww_sampling` | `wastewater_surveillance` | Wastewater surveillance metadata. |
+| `covid_*`, `*_frequency`, `*_cat`, survey fields | `human_survey` | Human survey, lifestyle, demographic, or health questionnaire metadata. |
+| `diet_type`, `drinking_water_source`, `gluten`, `whole_eggs`, `oils_*` | `diet_metadata` | Diet and consumption metadata. |
+| `samp_*`, `sample_*`, `nucleic_acid_*`, `quality_control_*` | `sample_processing` | Collection, extraction, lysis, storage, or preprocessing metadata. |
+| `sequencing_*`, `filename_*`, `seq_meth` | `sequencing_metadata` | Sequencing files, methods, or workflow metadata. |
+| `statistical_analysis_*`, `taxonomic_annotation_*`, `pcr_primers` | `omics_analysis` | Analysis methods, annotation tools, or assay targets. |
+| `fasting_glucose`, `fasting_insulin`, `homa_ir`, hormone-related fields | `physiology_measurement` | Host physiology or biomarker measurements. |
+| `pig_*`, `breeds`, `weaning_age_days`, `sampling_weight_kg` | `animal_husbandry` | Animal husbandry or livestock context. |
 
 ## Why This Shape Works
 
