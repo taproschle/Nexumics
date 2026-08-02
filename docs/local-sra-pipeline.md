@@ -385,12 +385,13 @@ python -c "import duckdb, pathlib; con = duckdb.connect(':memory:'); print(con.e
 - Silver Parquet is the optimized analytical representation of Silver.
 - Gold contains analysis-ready aggregate tables.
 - Quality checks are intentionally simple and local-first.
-- DuckDB is the local query engine; PostgreSQL and Metabase can come later.
+- DuckDB is the local query engine over Parquet.
+- PostgreSQL serves the compact Gold layer for SQL clients, VS Code exploration, and future BI tools.
 
 ## Next Steps
 
-1. Add more Gold tables, such as top organisms by domain and top attribute categories by domain.
-2. Add stricter quality checks for row-count consistency between Bronze, Silver, and Gold.
-3. Add taxonomy enrichment from NCBI Taxonomy instead of expanding taxon allowlists manually.
+1. Add Metabase on top of PostgreSQL for dashboard exploration.
+2. Add more Gold tables for trends, taxonomy coverage, and metadata completeness.
+3. Add stricter data contracts for Silver and Gold schemas.
 4. Add orchestration with Dagster after the local command remains stable.
-5. Expand data coverage only after quality checks and Gold outputs are ready to absorb new batches.
+5. Continue expanding data coverage while keeping Taxonomy reference updates and quality checks in the loop.

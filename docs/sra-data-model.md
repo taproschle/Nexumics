@@ -138,7 +138,7 @@ Implemented tables:
 | `sra_sample_attribute.csv` | Consolidated SRA sample attribute rows. | One row per sample, BioSample, normalized attribute, and value. |
 | `sra_sample_classification.csv` | Silver samples plus sample attribute signals. | One row per sample with derived domain, organism group, and sample context. |
 
-This first pass intentionally stays in CSV and uses only the Python standard library. DuckDB and Parquet should be introduced after the table shapes are reviewed and stable.
+Silver CSV remains a readable development artifact. The current pipeline also exports these tables to Parquet and uses DuckDB for local analytical queries.
 
 Silver summary tables can be generated with:
 
@@ -146,7 +146,7 @@ Silver summary tables can be generated with:
 nexumics-summarize-sra-silver
 ```
 
-These compact CSV summaries live under `data/silver/sra/summary/` and provide quick checks for sample domains, organism groups, sample contexts, domain/context combinations, attribute categories, and library strategies. They are intentionally lightweight and should be replaced or complemented by DuckDB SQL once the project moves to Parquet-backed analytics.
+These compact CSV summaries live under `data/silver/sra/summary/` and provide quick checks for sample domains, organism groups, sample contexts, domain/context combinations, attribute categories, and library strategies. They are intentionally lightweight and complement the DuckDB SQL queries over Parquet-backed Silver and Gold tables.
 
 SRA Silver CSV tables can also be exported to Parquet with:
 
