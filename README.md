@@ -106,14 +106,14 @@ nexumics-sra-batch-ingest --query "WGS[All Fields] AND bacteria[Organism]" --max
 
 The batch command uses Entrez History, writes one raw XML file per batch, writes per-batch bronze CSV files, and records batch status under `data/manifests/sra/`.
 
-Current bronze outputs:
+Current bronze batch outputs:
 
 ```text
-data/bronze/sra/sra-bronze-preview-<query>-<timestamp>.csv
-data/bronze/sra/sra-sample-attributes-preview-<query>-<timestamp>.csv
+data/bronze/sra/batches/<query-job-id>/sra-bronze-batch-<batch-number>.csv
+data/bronze/sra/batches/<query-job-id>/sra-sample-attributes-batch-<batch-number>.csv
 ```
 
-Combine local SRA bronze previews:
+Combine local SRA bronze batches:
 
 ```powershell
 nexumics-combine-sra-bronze
@@ -125,7 +125,7 @@ This writes deduplicated combined CSV files under:
 data/bronze/sra/combined/
 ```
 
-For sample attributes, the combine command recalculates normalized attribute names and categories with the current parser logic.
+Combined rows include `source_dataset` and `source_file` columns so overlapping queries can be traced back to the local batch folder that produced them. For sample attributes, the combine command recalculates normalized attribute names and categories with the current parser logic.
 
 Profile observed SRA sample attributes:
 
