@@ -32,6 +32,11 @@ logs/
 tmp/
 *.log
 
+# Local DuckDB scratch/database files
+*.duckdb
+*.duckdb.wal
+.c
+
 # OS and editor files
 .DS_Store
 Thumbs.db

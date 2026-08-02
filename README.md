@@ -234,6 +234,15 @@ data/gold/sra/parquet/
 
 The first Gold pass creates domain, context, domain/library strategy, top-organism, attribute-category, and quality summary Parquet tables. Versioned SQL queries for these tables live under `sql/gold/sra/`.
 
+Load SRA Gold tables into local PostgreSQL:
+
+```powershell
+docker compose up -d postgres
+nexumics-load-sra-gold-postgres
+```
+
+This creates and reloads the `gold_sra` schema from `data/gold/sra/parquet/`. See `docs/postgres-serving-layer.md` for table details and verification SQL.
+
 Run quality checks against local SRA lake outputs:
 
 ```powershell

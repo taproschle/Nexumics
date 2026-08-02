@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "Data engineering pipeline for public omics metadata."
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = ["duckdb>=1.0"]
+dependencies = ["duckdb>=1.0", "psycopg[binary]>=3.1"]
 
 [project.scripts]
 nexumics-sra-discovery = "nexumics.cli.sra_discovery:main"
@@ -22,6 +22,7 @@ nexumics-summarize-sra-silver = "nexumics.cli.summarize_sra_silver:main"
 nexumics-sra-batch-ingest = "nexumics.cli.sra_batch_ingest:main"
 nexumics-profile-sra-attributes = "nexumics.cli.profile_sra_attributes:main"
 nexumics-update-ncbi-taxonomy-reference = "nexumics.cli.update_ncbi_taxonomy_reference:main"
+nexumics-load-sra-gold-postgres = "nexumics.cli.load_sra_gold_postgres:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

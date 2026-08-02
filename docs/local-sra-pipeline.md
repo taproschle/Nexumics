@@ -31,6 +31,7 @@ Bronze batches
 -> Gold Parquet
 -> Silver summary CSV
 -> Quality report
+-> optional PostgreSQL serving schema
 ```
 
 The command is intended to be the main local rebuild entrypoint once SRA batch data has already been downloaded.
@@ -46,6 +47,7 @@ data/bronze/sra/batches/
   -> data/gold/sra/parquet/
   -> data/silver/sra/summary/
   -> data/quality/sra/
+  -> PostgreSQL gold_sra schema
 ```
 
 ## Stage Commands
@@ -315,6 +317,35 @@ The current quality report verifies:
 | `gold_sra_quality_summary_exists` | Ensure Gold quality summary exists. |
 
 The current unknown sample count is 56, or 0.068% of classified samples. This passes because the quality gate now allows either a small absolute count or a low proportional rate for larger local lakes.
+
+### 8. Load Gold To PostgreSQL
+
+```powershell
+nexumics-load-sra-gold-postgres
+```
+
+Inputs:
+
+```text
+data/gold/sra/parquet/
+```
+
+Outputs:
+
+```text
+gold_sra.sra_domain_summary
+gold_sra.sra_context_summary
+gold_sra.sra_domain_library_strategy_summary
+gold_sra.sra_top_organisms_by_domain
+gold_sra.sra_attribute_category_by_domain
+gold_sra.sra_quality_summary
+```
+
+Purpose:
+
+- Publish the compact Gold layer to a SQL serving database.
+- Keep PostgreSQL focused on dashboard-ready tables instead of loading the full Silver lake initially.
+- Prepare a stable serving layer for Metabase or other BI tools.
 
 ## Current Gold Snapshot
 

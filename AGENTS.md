@@ -62,6 +62,7 @@ The repository now has a working local SRA metadata lake pipeline. The current v
 - `docs/sra-metadata-discovery.md`: first SRA metadata inspection and design implications.
 - `docs/sra-data-model.md`: SRA bronze/silver modeling strategy across humans, animals, plants, fungi, protists, microorganisms, viruses, and environmental/metagenomic samples.
 - `docs/local-sra-pipeline.md`: implemented local rebuild flow from Bronze batches to Silver CSV, Silver Parquet, Gold Parquet, summaries, and quality reports.
+- `docs/postgres-serving-layer.md`: first PostgreSQL serving layer for SRA Gold tables.
 - `docs/project-brief.md`: GitHub-readable project brief.
 - `docs/technical-design.md`: GitHub-readable technical design document.
 - `src/nexumics/`: Python package for Entrez access, raw storage, SRA parsing, SRA attribute dictionary rules, SRA attribute profiling, Bronze combining, local NCBI Taxonomy reference updates, Silver modeling, Parquet export, Gold analytics, quality checks, local pipeline rebuilds, and resumable SRA batch ingestion.
@@ -92,6 +93,7 @@ The code implements a small SRA discovery flow, a resumable SRA batch ingestion 
 - Use `nexumics-sra-batch-ingest` for moderate SRA metadata pulls. It should use Entrez History, per-batch raw XML, per-batch bronze CSVs, and a JSONL manifest for resumability.
 - Use `nexumics-update-ncbi-taxonomy-reference` after Silver samples exist to update `data/reference/ncbi_taxonomy/taxonomy_reference.csv` from observed `taxon_id` values. This command calls NCBI Taxonomy, should fetch only missing IDs unless `--rebuild` is explicitly used, and should preserve raw XML plus a JSONL manifest under `data/raw/ncbi_taxonomy/` and `data/manifests/ncbi_taxonomy/`.
 - Use `nexumics-build-sra-local-lake` to rebuild local artifacts from existing Bronze batches. This command does not download new data.
+- Use `nexumics-load-sra-gold-postgres` to publish Gold Parquet tables to PostgreSQL under the `gold_sra` schema. PostgreSQL is a serving layer, not the source of truth for raw/Bronze/Silver/Gold files.
 - Do not promote human-specific sample fields such as `age`, `sex`, and `tissue` into the universal SRA model without a flexible attribute strategy.
 - Preserve `SAMPLE_ATTRIBUTES` as flexible key-value bronze records before deriving sample classifications.
 - Keep `sra_sample_classification` conservative and evidence-based. Known sample domains currently include `human`, `animal`, `plant`, `fungi`, `protist`, `microorganism`, `virus`, `metagenome`, and `unknown`.
