@@ -36,6 +36,7 @@ APIs -> Raw JSON -> Bronze Parquet -> Silver Standardized -> Gold Analytics -> P
 - [Data Sources](docs/data-sources.md)
 - [SRA Metadata Discovery](docs/sra-metadata-discovery.md)
 - [SRA Data Model](docs/sra-data-model.md)
+- [Local SRA Pipeline](docs/local-sra-pipeline.md)
 - [Project Brief](docs/project-brief.md)
 - [Technical Design Document](docs/technical-design.md)
 
@@ -87,6 +88,7 @@ docs/
   data-sources.md
   sra-metadata-discovery.md
   sra-data-model.md
+  local-sra-pipeline.md
   project-brief.md
   technical-design.md
 ```
