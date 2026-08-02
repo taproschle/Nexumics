@@ -51,11 +51,13 @@ src/
     sra_attribute_dictionary.py
     sra_attribute_profile.py
     sra_batch.py
+    sra_gold.py
     sra_parser.py
     sra_parquet.py
     sra_silver.py
     sra_silver_summary.py
     cli/
+      build_sra_gold.py
       build_sra_silver.py
       combine_sra_bronze.py
       export_sra_silver_parquet.py
@@ -64,6 +66,11 @@ src/
       sra_batch_ingest.py
       sra_discovery.py
 sql/
+  gold/
+    sra/
+      domain_summary.sql
+      context_summary.sql
+      domain_library_strategy_summary.sql
   sra/
     sample_domain_counts.sql
     sample_context_counts.sql
@@ -186,6 +193,20 @@ The SQL files under `sql/sra/` query these Parquet outputs with DuckDB. For exam
 ```powershell
 python -c "import duckdb, pathlib; con = duckdb.connect(':memory:'); print(con.execute(pathlib.Path('sql/sra/sample_domain_counts.sql').read_text()).fetchdf())"
 ```
+
+Build first-pass SRA Gold analytical tables:
+
+```powershell
+nexumics-build-sra-gold
+```
+
+This reads Silver Parquet files and writes Gold Parquet tables under:
+
+```text
+data/gold/sra/parquet/
+```
+
+The first Gold pass creates `sra_domain_summary.parquet`, `sra_context_summary.parquet`, and `sra_domain_library_strategy_summary.parquet`. Versioned SQL queries for these tables live under `sql/gold/sra/`.
 
 Profile observed SRA sample attributes:
 

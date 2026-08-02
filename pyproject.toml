@@ -14,6 +14,7 @@ dependencies = ["duckdb>=1.0"]
 nexumics-sra-discovery = "nexumics.cli.sra_discovery:main"
 nexumics-combine-sra-bronze = "nexumics.cli.combine_sra_bronze:main"
 nexumics-build-sra-silver = "nexumics.cli.build_sra_silver:main"
+nexumics-build-sra-gold = "nexumics.cli.build_sra_gold:main"
 nexumics-export-sra-silver-parquet = "nexumics.cli.export_sra_silver_parquet:main"
 nexumics-summarize-sra-silver = "nexumics.cli.summarize_sra_silver:main"
 nexumics-sra-batch-ingest = "nexumics.cli.sra_batch_ingest:main"

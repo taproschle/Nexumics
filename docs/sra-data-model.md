@@ -165,6 +165,30 @@ data/silver/sra/parquet/sra_sample_classification.parquet
 
 Versioned SQL queries under `sql/sra/` use these Parquet files as the local analytical interface. This is the bridge from file-based Silver outputs toward Gold analytics.
 
+## First-Pass Gold Implementation
+
+The first Gold step builds analytical Parquet tables from Silver Parquet:
+
+```powershell
+nexumics-build-sra-gold
+```
+
+Outputs are written under:
+
+```text
+data/gold/sra/parquet/
+```
+
+Implemented Gold tables:
+
+| Table | Grain | Purpose |
+| --- | --- | --- |
+| `sra_domain_summary.parquet` | One row per `sample_domain`. | Portfolio-level overview of samples, runs, attributes, and major attribute signals by biological domain. |
+| `sra_context_summary.parquet` | One row per `sample_context`. | Overview of clinical, tissue, host-associated, environmental, metagenomic, experimental, and unknown contexts. |
+| `sra_domain_library_strategy_summary.parquet` | One row per domain and library strategy. | Shows which sequencing strategies dominate each biological domain. |
+
+Versioned SQL queries for Gold outputs live under `sql/gold/sra/`.
+
 ### `sra_sample_classification`
 
 Derived classification table used for cross-domain filtering and analytics.
