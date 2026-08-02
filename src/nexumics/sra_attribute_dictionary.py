@@ -32,9 +32,11 @@ ATTRIBUTE_CATEGORY_MAP: dict[str, frozenset[str]] = {
             "body_site",
             "cell_line",
             "cell_subtype",
+            "cell_types",
             "cell_type",
             "organism_part",
             "tissue",
+            "tissue_site",
             "tissue_type",
         }
     ),
@@ -59,12 +61,15 @@ ATTRIBUTE_CATEGORY_MAP: dict[str, frozenset[str]] = {
             "host_raw_meat_feeding",
             "host_scientific_name",
             "host_sex",
+            "host_strain",
             "host_subject_id",
             "host_taxid",
             "host_tot_mass",
             "lab_host",
             "specific_host",
             "host_disease_outcome",
+            "mouse_id",
+            "animal_id",
         }
     ),
     "organism_identity": frozenset(
@@ -115,6 +120,8 @@ ATTRIBUTE_CATEGORY_MAP: dict[str, frozenset[str]] = {
             "sample_description",
             "source_name",
             "isolation_source_non_host_associated",
+            "isolation_site",
+            "source_of_isolate",
             "type_details",
             "typedetails",
         }
@@ -147,6 +154,13 @@ ATTRIBUTE_CATEGORY_MAP: dict[str, frozenset[str]] = {
             "material_source_geographic_location",
             "material_source_latitude",
             "material_source_longitude",
+            "geographic_location_depth",
+            "geographic_location_elevation",
+            "birth_date",
+            "collection_time",
+            "collection_timestamp",
+            "death_date",
+            "year",
         }
     ),
     "environment": frozenset(
@@ -159,11 +173,22 @@ ATTRIBUTE_CATEGORY_MAP: dict[str, frozenset[str]] = {
             "env_local_scale",
             "env_material",
             "env_medium",
+            "empo_1",
+            "empo_2",
+            "empo_3",
+            "empo_4",
+            "env_package",
             "environmental_medium",
+            "environmental_package",
             "environmental_sample",
             "climate_environment",
+            "biome",
+            "environment",
+            "feature",
             "habitat",
             "local_environmental_context",
+            "material",
+            "sediment_environmental_package",
             "soil_type",
             "wastewater_type",
         }
@@ -171,10 +196,14 @@ ATTRIBUTE_CATEGORY_MAP: dict[str, frozenset[str]] = {
     "environmental_measurement": frozenset(
         {
             "altitude",
+            "alt_elev",
+            "annual_precpt",
             "depth",
             "elev",
             "elevation",
             "microbial_biomass",
+            "ph",
+            "soil_text_measure",
             "osmolality_mosmkg",
             "samp_size",
             "temp",
@@ -228,6 +257,17 @@ ATTRIBUTE_CATEGORY_MAP: dict[str, frozenset[str]] = {
             "submitted_subject_id",
             "specimen_id",
             "tolid",
+            "gold_stamp_id",
+            "greengenes_id",
+            "insect_id",
+            "patient_id",
+            "patientid",
+            "sample",
+            "id",
+            "sra",
+            "sra_accession",
+            "mag_id",
+            "stud_book_number",
         }
     ),
     "submission_metadata": frozenset(
@@ -264,6 +304,13 @@ ATTRIBUTE_CATEGORY_MAP: dict[str, frozenset[str]] = {
             "identifier_affiliation",
             "study_name",
             "submitter_handle",
+            "animal_license",
+            "animal_source",
+            "ethics_approval",
+            "facility",
+            "physical_specimen_location",
+            "ena_checklist",
+            "funding_program",
         }
     ),
     "controlled_access_metadata": frozenset(
@@ -280,13 +327,52 @@ ATTRIBUTE_CATEGORY_MAP: dict[str, frozenset[str]] = {
             "purpose_of_ww_sampling",
             "sample_capture_status",
             "study_phase",
+            "investigation_type",
         }
     ),
     "antimicrobial_resistance": frozenset({"amr_qc", "carba_allel", "mic_meropenem"}),
     "molecular_typing": frozenset(
         {"locus_tag_prefix", "mlst_scheme", "mlst_type", "phylogroup", "pubmlst_scheme", "sequence_type"}
     ),
-    "genome_metadata": frozenset({"estimated_size", "extrachrom_elements", "genome_group"}),
+    "genome_metadata": frozenset(
+        {"estimated_size", "extrachrom_elements", "genome_group", "number_of_replicons"}
+    ),
+    "metagenome_assembly": frozenset(
+        {
+            "assembly_method",
+            "assembly_method_and_version",
+            "assembly_method_version",
+            "bin_id",
+            "completeness_estimated",
+            "contamination_estimated",
+            "derived_from",
+            "dreived_from",
+            "genome_coverage",
+            "mapping_method",
+            "mapping_method_and_version",
+            "mapping_method_version",
+            "metagenome_source",
+            "metagenomic",
+            "quality_assessment_method",
+            "quality_assessment_method_and_version",
+            "quality_assessment_method_version",
+            "subsource_note",
+            "subsrc_note",
+        }
+    ),
+    "microbial_phenotype": frozenset(
+        {
+            "cell_shape",
+            "gram_staining",
+            "medium",
+            "motility",
+            "rel_to_oxygen",
+            "temperature_optimum",
+            "temperature_range",
+            "trophic_level",
+            "type_strain",
+        }
+    ),
     "pathogen_metadata": frozenset({"field_diagnosis", "pathogenicity", "pathotype"}),
     "sequencing_metadata": frozenset(
         {
@@ -298,6 +384,8 @@ ATTRIBUTE_CATEGORY_MAP: dict[str, frozenset[str]] = {
             "filename",
             "filename2",
             "filetype",
+            "i5_forward_seq",
+            "i7_forward_seq",
             "instrument_model",
             "library_layout",
             "library_selection",
@@ -305,6 +393,9 @@ ATTRIBUTE_CATEGORY_MAP: dict[str, frozenset[str]] = {
             "library_strategy",
             "library_type",
             "platform",
+            "sequencing_assay",
+            "sequencing_batch",
+            "sequencing_method",
             "sequencing_data_link",
             "sequencing_reads_alignment_tool",
             "sequencing_reads_assembly_tool",
@@ -367,6 +458,24 @@ ATTRIBUTE_CATEGORY_MAP: dict[str, frozenset[str]] = {
             "group_description",
             "growth_protocol",
             "isolation_and_growth_condition",
+            "batch",
+            "block",
+            "diet_treatment",
+            "drug_treatment",
+            "experimental_group",
+            "experimental_stage",
+            "experiment",
+            "evolution_line",
+            "generation",
+            "epd",
+            "evolved_population",
+            "experimental_factor",
+            "gavage_treatment",
+            "pdx_passage",
+            "replicate_number",
+            "study_condition",
+            "treatment_code",
+            "wells",
         }
     ),
     "developmental_stage": frozenset(
@@ -405,6 +514,8 @@ ATTRIBUTE_CATEGORY_MAP: dict[str, frozenset[str]] = {
     "diet_metadata": frozenset(
         {
             "diet_type",
+            "diet",
+            "dietary_treatment",
             "drinking_water_source",
             "fermented_increased",
             "gluten",
@@ -475,6 +586,7 @@ ATTRIBUTE_CATEGORY_MAP: dict[str, frozenset[str]] = {
             "storage_conditions",
             "store_cond",
             "rqn",
+            "rin",
         }
     ),
     "fungal_metadata": frozenset(
@@ -489,7 +601,19 @@ ATTRIBUTE_CATEGORY_MAP: dict[str, frozenset[str]] = {
         }
     ),
     "animal_husbandry": frozenset(
-        {"age_days", "breeds", "sampling_weight_kg", "weaning_age_days", "pig_housing_location", "pig_housing_type", "pig_location_sampling"}
+        {
+            "age_days",
+            "birth_location",
+            "breeding_history",
+            "breeding_method",
+            "breeds",
+            "housing",
+            "sampling_weight_kg",
+            "weaning_age_days",
+            "pig_housing_location",
+            "pig_housing_type",
+            "pig_location_sampling",
+        }
     ),
     "omics_analysis": frozenset(
         {

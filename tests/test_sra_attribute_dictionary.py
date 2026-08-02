@@ -75,6 +75,20 @@ class SraAttributeDictionaryTests(unittest.TestCase):
         self.assertEqual(categorize_attribute("clade"), "organism_identity")
         self.assertEqual(categorize_attribute("habitat"), "environment")
         self.assertEqual(categorize_attribute("microbial_biomass_meth"), "fungal_metadata")
+        self.assertEqual(categorize_attribute("metagenome_source"), "metagenome_assembly")
+        self.assertEqual(categorize_attribute("completeness_estimated"), "metagenome_assembly")
+        self.assertEqual(categorize_attribute("rel_to_oxygen"), "microbial_phenotype")
+        self.assertEqual(categorize_attribute("sequencing_assay"), "sequencing_metadata")
+        self.assertEqual(categorize_attribute("replicate_number"), "experimental_design")
+        self.assertEqual(categorize_attribute("diet"), "diet_metadata")
+        self.assertEqual(categorize_attribute("mouse_id"), "host")
+        self.assertEqual(categorize_attribute("host_strain"), "host")
+        self.assertEqual(categorize_attribute("cell_types"), "host_material")
+        self.assertEqual(categorize_attribute("ph"), "environmental_measurement")
+        self.assertEqual(categorize_attribute("env_package"), "environment")
+        self.assertEqual(categorize_attribute("sra_accession"), "sample_identifier")
+        self.assertEqual(categorize_attribute("ena_checklist"), "submission_metadata")
+        self.assertEqual(categorize_attribute("evolution_line"), "experimental_design")
         self.assertEqual(categorize_attribute("clinical_status"), "clinical")
         self.assertEqual(categorize_attribute("unexpected"), "other")
 
@@ -88,6 +102,7 @@ class SraAttributeDictionaryTests(unittest.TestCase):
             set(ATTRIBUTE_CATEGORY_MAP["host"]),
             {
                 "add_host_info",
+                "animal_id",
                 "host",
                 "host_age",
                 "host_age_normalized_years",
@@ -107,10 +122,12 @@ class SraAttributeDictionaryTests(unittest.TestCase):
                 "host_phenotype",
                 "host_scientific_name",
                 "host_sex",
+                "host_strain",
                 "host_subject_id",
                 "host_taxid",
                 "host_tot_mass",
                 "lab_host",
+                "mouse_id",
                 "specific_host",
             },
         )

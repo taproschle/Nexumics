@@ -186,6 +186,8 @@ The profile counts each normalized attribute, records its current category, coun
 | `plant_*`, `biological_material_*`, `material_source_*`, `ecotype`, `population` | `plant_metadata` | Plant accession, structure, growth, or source metadata. |
 | `gap_*` | `controlled_access_metadata` | dbGaP controlled-access identifiers and consent metadata. |
 | `microbial_biomass_meth`, `sieving`, `soil_type_meth`, fungal enrichment fields | `fungal_metadata` | Fungal, soil, or fungal-enrichment-specific metadata. |
+| `metagenome_source`, `completeness_estimated`, `contamination_estimated`, assembly/mapping/quality methods | `metagenome_assembly` | MAG, SAG, binning, assembly, or metagenome-derived genome metadata. |
+| `rel_to_oxygen`, `gram_staining`, `motility`, `cell_shape`, `temperature_optimum` | `microbial_phenotype` | Microbial physiology or phenotype metadata. |
 
 ## Why This Shape Works
 
