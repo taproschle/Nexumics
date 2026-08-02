@@ -88,6 +88,7 @@ The first code scaffold exists and implements a small SRA discovery flow.
 - Treat SRA metadata discovery as the current first source exploration path.
 - Keep the first SRA flow small: `esearch` for UIDs, `efetch` for XML, raw local persistence, and a bronze CSV preview.
 - Do not promote human-specific sample fields such as `age`, `sex`, and `tissue` into the universal SRA model without a flexible attribute strategy.
+- Preserve `SAMPLE_ATTRIBUTES` as flexible key-value bronze records before deriving sample classifications.
 - Prefer small, well-scoped changes that make the project easier to understand.
 - Do not introduce a framework or service unless it supports the planned stack or the user explicitly approves the change.
 - Explain meaningful technical decisions in the user conversation before or while implementing them.

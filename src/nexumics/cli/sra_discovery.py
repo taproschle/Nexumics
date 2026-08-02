@@ -8,7 +8,12 @@ from pathlib import Path
 
 from nexumics.entrez import EntrezClient, EntrezConfig, parse_esearch_ids
 from nexumics.raw_storage import slugify, utc_timestamp, write_raw_response
-from nexumics.sra_parser import parse_sra_efetch_xml, write_bronze_preview
+from nexumics.sra_parser import (
+    parse_sra_efetch_xml,
+    parse_sra_sample_attributes,
+    write_bronze_preview,
+    write_sample_attribute_preview,
+)
 
 
 DEFAULT_QUERY = "RNA-Seq[All Fields] AND Homo sapiens[Organism]"
@@ -59,9 +64,14 @@ def main() -> None:
     preview_path = bronze_dir / f"sra-bronze-preview-{timestamp}.csv"
     write_bronze_preview(records, preview_path)
 
+    sample_attributes = parse_sra_sample_attributes(fetch_response.text)
+    attributes_path = bronze_dir / f"sra-sample-attributes-preview-{timestamp}.csv"
+    write_sample_attribute_preview(sample_attributes, attributes_path)
+
     print(f"SRA UIDs: {', '.join(ids)}")
     print(f"Raw XML: {raw_xml_path}")
     print(f"Bronze preview: {preview_path}")
+    print(f"Sample attributes preview: {attributes_path}")
 
 
 if __name__ == "__main__":

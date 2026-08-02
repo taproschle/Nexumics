@@ -200,7 +200,8 @@ The first implementation now includes a tiny local discovery script that:
 2. Calls `efetch` for a small number of returned UIDs.
 3. Saves the raw XML response under an ignored local data path.
 4. Parses a minimal bronze preview with experiment, study, sample, BioProject, BioSample, organism, library, platform, and run fields.
-5. Prints or writes a small Markdown/CSV summary for inspection.
+5. Parses a sample-attribute bronze preview from `SAMPLE_ATTRIBUTES`.
+6. Prints or writes small CSV summaries for inspection.
 
 Raw response sidecar metadata redacts `api_key` if it is provided.
 
@@ -218,3 +219,10 @@ src/nexumics/cli/sra_discovery.py
 ```
 
 Raw responses and bronze previews are written under `data/`, which is intentionally ignored by Git.
+
+Current bronze outputs:
+
+```text
+data/bronze/sra/sra-bronze-preview-<timestamp>.csv
+data/bronze/sra/sra-sample-attributes-preview-<timestamp>.csv
+```

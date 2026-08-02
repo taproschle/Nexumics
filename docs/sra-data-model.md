@@ -141,7 +141,7 @@ Sample attributes should first be preserved as raw key-value rows. Silver classi
 | `strain`, `isolate`, `serovar`, `cultivar` | `organism_identity` | Microbial, viral, plant, or isolate-level identity. |
 | `isolation_source`, `source_material_id` | `source_material` | Source material for isolate or environmental sample. |
 | `geo_loc_name`, `lat_lon`, `collection_date` | `spatiotemporal` | Location and collection metadata. |
-| `env_biome`, `env_feature`, `env_material`, `environmental_sample` | `environment` | Environmental and metagenomic context. |
+| `env_biome`, `env_broad_scale`, `env_feature`, `env_local_scale`, `env_material`, `env_medium`, `environmental_sample` | `environment` | Environmental and metagenomic context. |
 | `BioSampleModel` | `schema_hint` | BioSample package/model hint. |
 
 ## Why This Shape Works
@@ -154,11 +154,12 @@ Sample attributes should first be preserved as raw key-value rows. Silver classi
 
 ## Implementation Priority
 
-1. Add `sra_sample_attribute` extraction from `SAMPLE_ATTRIBUTES`.
-2. Add title and description fields to the run preview or separated entities.
-3. Add run status/date fields.
-4. Add first-pass `sra_sample_classification` using simple rules.
-5. Later enrich `organism_group` from NCBI Taxonomy instead of relying only on organism text.
+1. Add `sra_sample_attribute` extraction from `SAMPLE_ATTRIBUTES`. Done in the bronze preview pipeline.
+2. Review sample attributes across human, bacterial, viral, metagenomic, and environmental examples.
+3. Add title and description fields to the run preview or separated entities.
+4. Add run status/date fields.
+5. Add first-pass `sra_sample_classification` using simple rules.
+6. Later enrich `organism_group` from NCBI Taxonomy instead of relying only on organism text.
 
 ## Open Questions
 

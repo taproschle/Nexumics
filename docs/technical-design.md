@@ -75,6 +75,7 @@ The first implementation focuses on a small SRA metadata discovery flow before i
 | Entrez client | Python standard library HTTP calls | Keeps the API mechanics visible while the project is still learning the source shape. |
 | Raw storage | Local files under ignored `data/raw/` | Preserves reproducible source responses without committing generated data; API keys are redacted from sidecar metadata. |
 | Bronze preview | CSV under ignored `data/bronze/` | Provides a simple human-readable output before choosing Parquet or database targets. |
+| Sample attributes preview | Key-value CSV under ignored `data/bronze/` | Preserves heterogeneous sample attributes across humans, microorganisms, and environmental records. |
 | XML parser | `xml.etree.ElementTree` | Sufficient for the first SRA `efetch` records without adding dependencies. |
 | Tests | Unit tests for search ID parsing and SRA XML parsing | Protects the first behavior without requiring network access in tests. |
 

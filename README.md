@@ -84,12 +84,19 @@ nexumics-sra-discovery --retmax 3
 
 The command writes raw Entrez responses and a bronze CSV preview under `data/`, which is intentionally ignored by Git.
 
+Current bronze outputs:
+
+```text
+data/bronze/sra/sra-bronze-preview-<timestamp>.csv
+data/bronze/sra/sra-sample-attributes-preview-<timestamp>.csv
+```
+
 ## Current Status
 
 The repository is in the first SRA metadata discovery stage. The next natural milestones are:
 
 1. Exercise the SRA discovery flow on a small query.
-2. Review the raw XML and bronze CSV output.
+2. Review the raw XML, run-level bronze CSV, and sample-attribute bronze CSV.
 3. Decide which SRA fields should be promoted into a first silver schema.
 4. Add stronger validation around parsed bronze records.
 5. Introduce orchestration only after the manual flow is well understood.

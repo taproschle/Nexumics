@@ -28,6 +28,16 @@ class SraBronzeRecord:
     total_bases: str
 
 
+@dataclass(frozen=True)
+class SraSampleAttributeRecord:
+    sample_accession: str
+    biosample_accession: str
+    attribute_name: str
+    attribute_value: str
+    normalized_attribute_name: str
+    attribute_category: str
+
+
 def parse_sra_efetch_xml(xml_text: str) -> list[SraBronzeRecord]:
     root = ET.fromstring(xml_text)
     records: list[SraBronzeRecord] = []
@@ -91,9 +101,83 @@ def parse_sra_efetch_xml(xml_text: str) -> list[SraBronzeRecord]:
     return records
 
 
+def parse_sra_sample_attributes(xml_text: str) -> list[SraSampleAttributeRecord]:
+    root = ET.fromstring(xml_text)
+    records: list[SraSampleAttributeRecord] = []
+
+    for sample in root.findall("EXPERIMENT_PACKAGE/SAMPLE"):
+        sample_accession = _attr(sample, "accession")
+        biosample_accession = _external_id(sample, "BioSample")
+        for attribute in sample.findall("SAMPLE_ATTRIBUTES/SAMPLE_ATTRIBUTE"):
+            name = _text(attribute, "TAG")
+            value = _text(attribute, "VALUE")
+            normalized_name = normalize_attribute_name(name)
+            records.append(
+                SraSampleAttributeRecord(
+                    sample_accession=sample_accession,
+                    biosample_accession=biosample_accession,
+                    attribute_name=name,
+                    attribute_value=value,
+                    normalized_attribute_name=normalized_name,
+                    attribute_category=categorize_attribute(normalized_name),
+                )
+            )
+
+    return records
+
+
 def write_bronze_preview(records: list[SraBronzeRecord], output_path: Path) -> None:
+    _write_records(records, output_path, SraBronzeRecord)
+
+
+def write_sample_attribute_preview(
+    records: list[SraSampleAttributeRecord], output_path: Path
+) -> None:
+    _write_records(records, output_path, SraSampleAttributeRecord)
+
+
+def normalize_attribute_name(name: str) -> str:
+    normalized = name.strip().lower()
+    for old, new in ((" ", "_"), ("-", "_"), ("/", "_")):
+        normalized = normalized.replace(old, new)
+    while "__" in normalized:
+        normalized = normalized.replace("__", "_")
+    return normalized.strip("_")
+
+
+def categorize_attribute(normalized_name: str) -> str:
+    if normalized_name in {"age", "sex", "disease"} or normalized_name.startswith("clinical_"):
+        return "clinical"
+    if normalized_name in {"tissue", "cell_type", "cell_line"}:
+        return "host_material"
+    if normalized_name in {"host", "host_taxid", "host_disease", "host_body_site"}:
+        return "host"
+    if normalized_name in {"strain", "isolate", "serovar", "cultivar", "genotype"}:
+        return "organism_identity"
+    if normalized_name in {"isolation_source", "source_material_id"}:
+        return "source_material"
+    if normalized_name in {"geo_loc_name", "lat_lon", "collection_date"}:
+        return "spatiotemporal"
+    if normalized_name in {
+        "env_biome",
+        "env_broad_scale",
+        "env_feature",
+        "env_local_scale",
+        "env_material",
+        "env_medium",
+        "environmental_sample",
+    }:
+        return "environment"
+    if normalized_name == "biosamplemodel":
+        return "schema_hint"
+    if normalized_name in {"biomaterial_provider", "unique_identifier"}:
+        return "administrative"
+    return "other"
+
+
+def _write_records(records: list, output_path: Path, record_type: type) -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    fieldnames = list(SraBronzeRecord.__dataclass_fields__.keys())
+    fieldnames = list(record_type.__dataclass_fields__.keys())
     with output_path.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=fieldnames)
         writer.writeheader()

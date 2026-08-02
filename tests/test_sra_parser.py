@@ -1,6 +1,11 @@
 import unittest
 
-from nexumics.sra_parser import parse_sra_efetch_xml
+from nexumics.sra_parser import (
+    categorize_attribute,
+    normalize_attribute_name,
+    parse_sra_efetch_xml,
+    parse_sra_sample_attributes,
+)
 
 
 SRA_XML = """<?xml version="1.0" encoding="UTF-8"?>
@@ -37,6 +42,20 @@ SRA_XML = """<?xml version="1.0" encoding="UTF-8"?>
         <TAXON_ID>9606</TAXON_ID>
         <SCIENTIFIC_NAME>Homo sapiens</SCIENTIFIC_NAME>
       </SAMPLE_NAME>
+      <SAMPLE_ATTRIBUTES>
+        <SAMPLE_ATTRIBUTE>
+          <TAG>age</TAG>
+          <VALUE>22 years</VALUE>
+        </SAMPLE_ATTRIBUTE>
+        <SAMPLE_ATTRIBUTE>
+          <TAG>geo loc name</TAG>
+          <VALUE>USA: Manassas, VA</VALUE>
+        </SAMPLE_ATTRIBUTE>
+        <SAMPLE_ATTRIBUTE>
+          <TAG>strain</TAG>
+          <VALUE>Example strain</VALUE>
+        </SAMPLE_ATTRIBUTE>
+      </SAMPLE_ATTRIBUTES>
     </SAMPLE>
     <RUN_SET>
       <RUN accession="SRR1" total_spots="10" total_bases="1500" />
@@ -64,3 +83,28 @@ class SraParserTests(unittest.TestCase):
         self.assertEqual(record.platform, "ILLUMINA")
         self.assertEqual(record.instrument_model, "Illumina NovaSeq X Plus")
         self.assertEqual(record.total_spots, "10")
+
+    def test_parse_sra_sample_attributes_extracts_flexible_attributes(self) -> None:
+        records = parse_sra_sample_attributes(SRA_XML)
+
+        self.assertEqual(len(records), 3)
+        self.assertEqual(records[0].sample_accession, "SRS1")
+        self.assertEqual(records[0].biosample_accession, "SAMN1")
+        self.assertEqual(records[0].attribute_name, "age")
+        self.assertEqual(records[0].attribute_value, "22 years")
+        self.assertEqual(records[0].normalized_attribute_name, "age")
+        self.assertEqual(records[0].attribute_category, "clinical")
+        self.assertEqual(records[1].normalized_attribute_name, "geo_loc_name")
+        self.assertEqual(records[1].attribute_category, "spatiotemporal")
+        self.assertEqual(records[2].attribute_category, "organism_identity")
+
+    def test_normalize_attribute_name(self) -> None:
+        self.assertEqual(normalize_attribute_name("geo loc name"), "geo_loc_name")
+        self.assertEqual(normalize_attribute_name("host-body-site"), "host_body_site")
+
+    def test_categorize_attribute(self) -> None:
+        self.assertEqual(categorize_attribute("env_biome"), "environment")
+        self.assertEqual(categorize_attribute("env_broad_scale"), "environment")
+        self.assertEqual(categorize_attribute("env_medium"), "environment")
+        self.assertEqual(categorize_attribute("host"), "host")
+        self.assertEqual(categorize_attribute("unexpected"), "other")
