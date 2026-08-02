@@ -188,6 +188,10 @@ The profile counts each normalized attribute, records its current category, coun
 | `microbial_biomass_meth`, `sieving`, `soil_type_meth`, fungal enrichment fields | `fungal_metadata` | Fungal, soil, or fungal-enrichment-specific metadata. |
 | `metagenome_source`, `completeness_estimated`, `contamination_estimated`, assembly/mapping/quality methods | `metagenome_assembly` | MAG, SAG, binning, assembly, or metagenome-derived genome metadata. |
 | `rel_to_oxygen`, `gram_staining`, `motility`, `cell_shape`, `temperature_optimum` | `microbial_phenotype` | Microbial physiology or phenotype metadata. |
+| `gender`, `diagnosis`, `histological_type`, `tnm_stage`, `immune_phenotype` | `clinical` | Clinical, tumor, or patient/sample disease descriptors. |
+| `library_platform`, `sequencinglane`, `assay_type`, `barcoding`, `kit` | `sequencing_metadata` | Single-cell or assay-specific sequencing workflow metadata. |
+| `genetic_modification`, `chip_antibody`, `immunoprecipitate`, `repeat`, `protocol` | `experimental_design` | Perturbation, antibody, replicate, protocol, or treatment design metadata. |
+| `time_hr`, `time_point`, `temperature`, `mating_status`, `cell_id` | mixed categories | Insect and developmental profiles introduce time, temperature, mating status, and cell identifiers. |
 
 ## Why This Shape Works
 

@@ -89,6 +89,20 @@ class SraAttributeDictionaryTests(unittest.TestCase):
         self.assertEqual(categorize_attribute("sra_accession"), "sample_identifier")
         self.assertEqual(categorize_attribute("ena_checklist"), "submission_metadata")
         self.assertEqual(categorize_attribute("evolution_line"), "experimental_design")
+        self.assertEqual(categorize_attribute("gender"), "clinical")
+        self.assertEqual(categorize_attribute("histological_type"), "clinical")
+        self.assertEqual(categorize_attribute("tnm_stage"), "clinical")
+        self.assertEqual(categorize_attribute("source_fraction"), "host_material")
+        self.assertEqual(categorize_attribute("biological_sex"), "host")
+        self.assertEqual(categorize_attribute("datasetid"), "sample_identifier")
+        self.assertEqual(categorize_attribute("biospecimen_repository"), "submission_metadata")
+        self.assertEqual(categorize_attribute("library_platform"), "sequencing_metadata")
+        self.assertEqual(categorize_attribute("sequencinglane"), "sequencing_metadata")
+        self.assertEqual(categorize_attribute("genetic_modification"), "experimental_design")
+        self.assertEqual(categorize_attribute("chip_antibody"), "experimental_design")
+        self.assertEqual(categorize_attribute("time_hr"), "spatiotemporal")
+        self.assertEqual(categorize_attribute("temperature"), "environmental_measurement")
+        self.assertEqual(categorize_attribute("mating_status"), "culture_metadata")
         self.assertEqual(categorize_attribute("clinical_status"), "clinical")
         self.assertEqual(categorize_attribute("unexpected"), "other")
 
@@ -103,6 +117,7 @@ class SraAttributeDictionaryTests(unittest.TestCase):
             {
                 "add_host_info",
                 "animal_id",
+                "biological_sex",
                 "host",
                 "host_age",
                 "host_age_normalized_years",
