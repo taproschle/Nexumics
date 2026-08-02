@@ -176,6 +176,62 @@ class SraSilverTests(unittest.TestCase):
                 "source_dataset": "metagenomic-5000 | bacteria-wgs",
                 "source_file": "runs.csv",
             },
+            {
+                "sample_accession": "SRS_RAT",
+                "biosample_accession": "SAMN_RAT",
+                "organism": "Rattus norvegicus",
+                "taxon_id": "10116",
+                "source_dataset": "single-cell-rnaseq",
+                "source_file": "runs.csv",
+            },
+            {
+                "sample_accession": "SRS_TOBACCO",
+                "biosample_accession": "SAMN_TOBACCO",
+                "organism": "Nicotiana tabacum",
+                "taxon_id": "4097",
+                "source_dataset": "amplicon-16s",
+                "source_file": "runs.csv",
+            },
+            {
+                "sample_accession": "SRS_SILKWORM",
+                "biosample_accession": "SAMN_SILKWORM",
+                "organism": "Bombyx mori",
+                "taxon_id": "7091",
+                "source_dataset": "single-cell-rnaseq",
+                "source_file": "runs.csv",
+            },
+            {
+                "sample_accession": "SRS_OYSTER",
+                "biosample_accession": "SAMN_OYSTER",
+                "organism": "Magallana gigas",
+                "taxon_id": "29159",
+                "source_dataset": "single-cell-rnaseq",
+                "source_file": "runs.csv",
+            },
+            {
+                "sample_accession": "SRS_YEAST",
+                "biosample_accession": "SAMN_YEAST",
+                "organism": "Saccharomyces paradoxus",
+                "taxon_id": "27291",
+                "source_dataset": "single-cell-rnaseq",
+                "source_file": "runs.csv",
+            },
+            {
+                "sample_accession": "SRS_FOX",
+                "biosample_accession": "SAMN_FOX",
+                "organism": "Vulpes lagopus",
+                "taxon_id": "494514",
+                "source_dataset": "single-cell-rnaseq",
+                "source_file": "runs.csv",
+            },
+            {
+                "sample_accession": "SRS_JEJUIBACTER",
+                "biosample_accession": "SAMN_JEJUIBACTER",
+                "organism": "Jejuibacter sp. L23",
+                "taxon_id": "3092086",
+                "source_dataset": "single-cell-rnaseq",
+                "source_file": "runs.csv",
+            },
         ]
         attribute_rows = [
             {
@@ -216,6 +272,16 @@ class SraSilverTests(unittest.TestCase):
         self.assertEqual(by_sample["SRS_ECOLI"]["sample_context"], "host-associated")
         self.assertEqual(by_sample["SRS_RICKETTSIA"]["organism_group"], "Bacteria")
         self.assertEqual(by_sample["SRS_RICKETTSIA"]["sample_domain"], "microorganism")
+        self.assertEqual(by_sample["SRS_RAT"]["sample_domain"], "animal")
+        self.assertEqual(by_sample["SRS_TOBACCO"]["organism_group"], "Viridiplantae")
+        self.assertEqual(by_sample["SRS_TOBACCO"]["sample_domain"], "plant")
+        self.assertEqual(by_sample["SRS_SILKWORM"]["sample_domain"], "animal")
+        self.assertEqual(by_sample["SRS_OYSTER"]["sample_domain"], "animal")
+        self.assertEqual(by_sample["SRS_YEAST"]["organism_group"], "Fungi")
+        self.assertEqual(by_sample["SRS_YEAST"]["sample_domain"], "fungi")
+        self.assertEqual(by_sample["SRS_FOX"]["sample_domain"], "animal")
+        self.assertEqual(by_sample["SRS_JEJUIBACTER"]["organism_group"], "Bacteria")
+        self.assertEqual(by_sample["SRS_JEJUIBACTER"]["sample_domain"], "microorganism")
 
     def write_csv(self, path: Path, fieldnames: list[str], rows: list[dict[str, str]]) -> None:
         with path.open("w", encoding="utf-8", newline="") as handle:

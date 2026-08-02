@@ -202,16 +202,63 @@ def empty_attribute_signal() -> dict[str, object]:
 def classify_organism_group(*, organism: str, taxon_id: str, source_dataset: str) -> str:
     organism_lower = organism.lower()
     dataset_lower = source_dataset.lower()
+    animal_taxon_ids = {
+        "7955",  # Danio rerio
+        "8319",  # Pleurodeles waltl
+        "9031",  # Gallus gallus
+        "9544",  # Macaca mulatta
+        "9597",  # Pan paniscus
+        "9598",  # Pan troglodytes
+        "9796",  # Equus caballus
+        "9823",  # Sus scrofa
+        "9940",  # Ovis aries
+        "10092",  # Mus musculus domesticus
+        "10116",  # Rattus norvegicus
+        "494514",  # Vulpes lagopus
+        "7782",  # Leucoraja erinaceus
+        "8296",  # Ambystoma mexicanum
+        "29159",  # Magallana gigas
+        "30301",  # Botryllus schlosseri
+        "34765",  # Oikopleura dioica
+        "37000",  # Pyrrhocoris apterus
+        "159736",  # Macrobrachium nipponense
+        "1962980",  # Aurelia coerulea
+    }
+    plant_taxon_ids = {
+        "4097",  # Nicotiana tabacum
+        "4577",  # Zea mays
+        "188998",  # Sinningia aggregata
+        "374723",  # Phtheirospermum japonicum
+    }
+    insect_taxon_ids = {
+        "7070",  # Tribolium castaneum
+        "7091",  # Bombyx mori
+        "108931",  # Nilaparvata lugens
+    }
+    fungal_taxon_ids = {
+        "27291",  # Saccharomyces paradoxus
+    }
+    algae_taxon_ids = {
+        "44745",  # Haematococcus lacustris
+    }
     if taxon_id == "9606" or organism_lower == "homo sapiens":
         return "Eukaryota"
-    if taxon_id == "10090" or organism_lower == "mus musculus":
+    if taxon_id == "10090" or taxon_id in animal_taxon_ids or organism_lower == "mus musculus":
         return "Eukaryota"
-    if "drosophila" in organism_lower:
+    if taxon_id in insect_taxon_ids or "drosophila" in organism_lower:
         return "Eukaryota"
-    if "viridiplantae" in dataset_lower or "plant-wgs" in dataset_lower:
+    if taxon_id in plant_taxon_ids or "viridiplantae" in dataset_lower or "plant-wgs" in dataset_lower:
         return "Viridiplantae"
-    if "fungi" in dataset_lower or "candidozyma" in organism_lower or "candida " in organism_lower or "fungus" in organism_lower:
+    if (
+        taxon_id in fungal_taxon_ids
+        or "fungi" in dataset_lower
+        or "candidozyma" in organism_lower
+        or "candida " in organism_lower
+        or "fungus" in organism_lower
+    ):
         return "Fungi"
+    if taxon_id in algae_taxon_ids:
+        return "Viridiplantae"
     if "archaea" in dataset_lower or any(term in organism_lower for term in ("methano", "archae")):
         return "Archaea"
     if "virus" in organism_lower or "viruses-organism" in dataset_lower:
@@ -220,6 +267,7 @@ def classify_organism_group(*, organism: str, taxon_id: str, source_dataset: str
         term in organism_lower
         for term in (
             "escherichia",
+            "jejuibacter",
             "salmonella",
             "pseudomonas",
             "rickettsia",
@@ -255,7 +303,7 @@ def classify_sample_domain(
         return "microorganism"
     if "metagenome" in organism_lower or "metagenomic" in dataset_lower or signal["metagenome_present"]:
         return "metagenome"
-    if taxon_id == "10090" or "drosophila" in organism_lower:
+    if organism_group == "Eukaryota":
         return "animal"
     return "unknown"
 

@@ -160,6 +160,8 @@ Derived classification table used for cross-domain filtering and analytics.
 
 The first implementation uses transparent heuristic rules. For example, `Homo sapiens` or taxon `9606` maps to `human`, source datasets containing viral, bacterial, archaeal, fungal, plant, or metagenomic signals help infer broad domains, and attribute categories such as `host`, `environment`, and `clinical` help infer context. Ambiguous fields remain conservative until stronger taxonomy enrichment is added.
 
+After reviewing initially unknown samples, the heuristic rules include a small allowlist of frequent observed taxon IDs for common animals, insects, plants, fungi, algae, and microorganisms. Non-biological controls such as `blank sample` intentionally remain `unknown`.
+
 ## Attribute Classification Strategy
 
 Sample attributes should first be preserved as raw key-value rows. Silver classification can then derive higher-level categories from observed attributes.
