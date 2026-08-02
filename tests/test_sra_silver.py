@@ -381,6 +381,7 @@ class SraSilverTests(unittest.TestCase):
 
         self.assertEqual(rows[0]["organism_group"], "Protists")
         self.assertEqual(rows[0]["sample_domain"], "protist")
+        self.assertIn("taxonomy_reference_present", rows[0]["classification_basis"])
 
     def write_csv(self, path: Path, fieldnames: list[str], rows: list[dict[str, str]]) -> None:
         with path.open("w", encoding="utf-8", newline="") as handle:

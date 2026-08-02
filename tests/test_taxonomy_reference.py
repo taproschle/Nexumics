@@ -1,9 +1,11 @@
 import csv
+import json
 from pathlib import Path
 import tempfile
 import unittest
 
 from nexumics.taxonomy_reference import (
+    append_taxonomy_manifest_event,
     parse_taxonomy_xml,
     read_unique_taxon_ids,
     write_taxonomy_reference,
@@ -139,3 +141,14 @@ class TaxonomyReferenceTests(unittest.TestCase):
                 rows = list(csv.DictReader(handle))
             self.assertEqual(count, 2)
             self.assertEqual([row["taxon_id"] for row in rows], ["5833", "9606"])
+
+    def test_append_taxonomy_manifest_event_writes_jsonl(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "manifests" / "taxonomy.jsonl"
+
+            append_taxonomy_manifest_event(path, {"status": "success", "fetched_taxon_ids": 2})
+
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            self.assertEqual(payload["status"], "success")
+            self.assertEqual(payload["fetched_taxon_ids"], 2)
+            self.assertIn("created_at", payload)

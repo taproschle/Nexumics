@@ -252,9 +252,13 @@ Output:
 
 ```text
 data/reference/ncbi_taxonomy/taxonomy_reference.csv
+data/raw/ncbi_taxonomy/
+data/manifests/ncbi_taxonomy/taxonomy-reference-updates.jsonl
 ```
 
 This table is a local data artifact and is intentionally ignored by Git. The versioned repository contains the code, schema, tests, and documentation required to rebuild it.
+
+The update command also writes raw NCBI Taxonomy XML responses and a JSONL manifest. This preserves the lakehouse principle used by SRA ingestion: raw API responses remain auditable, while the reference CSV is the curated local lookup used by Silver classification.
 
 | Field | Notes |
 | --- | --- |

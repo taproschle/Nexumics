@@ -13,6 +13,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Update the local NCBI Taxonomy reference table.")
     parser.add_argument("--sample-path", default="data/silver/sra/sra_sample.csv")
     parser.add_argument("--output-path", default="data/reference/ncbi_taxonomy/taxonomy_reference.csv")
+    parser.add_argument("--raw-dir", default="data/raw/ncbi_taxonomy")
+    parser.add_argument("--manifest-path", default="data/manifests/ncbi_taxonomy/taxonomy-reference-updates.jsonl")
     parser.add_argument("--batch-size", type=int, default=200)
     parser.add_argument("--rebuild", action="store_true", help="Ignore any existing reference and rebuild from input IDs.")
     parser.add_argument("--email", default=os.getenv("NCBI_EMAIL"), help="Contact email for NCBI E-utilities.")
@@ -32,12 +34,16 @@ def main() -> None:
         api_key=args.api_key,
         batch_size=args.batch_size,
         rebuild=args.rebuild,
+        raw_dir=Path(args.raw_dir),
+        manifest_path=Path(args.manifest_path),
     )
 
     print(f"Input taxon IDs: {summary.input_taxon_ids}")
     print(f"Existing taxon IDs: {summary.existing_taxon_ids}")
     print(f"Fetched taxon IDs: {summary.fetched_taxon_ids}")
     print(f"Output taxon IDs: {summary.output_taxon_ids}")
+    print(f"Raw batches: {summary.raw_batch_count}")
+    print(f"Manifest: {summary.manifest_path}")
     print(f"Output path: {summary.output_path}")
 
 

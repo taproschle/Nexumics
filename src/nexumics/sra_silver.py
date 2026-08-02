@@ -129,7 +129,9 @@ def build_sra_sample_classification_rows(
         if taxonomy_row and taxonomy_row.get("organism_group") and taxonomy_row.get("sample_domain"):
             organism_group = taxonomy_row["organism_group"]
             sample_domain = taxonomy_row["sample_domain"]
+            used_taxonomy_reference = True
         else:
+            used_taxonomy_reference = False
             organism_group = classify_organism_group(
                 organism=organism,
                 taxon_id=taxon_id,
@@ -168,6 +170,7 @@ def build_sra_sample_classification_rows(
                     sample_domain=sample_domain,
                     sample_context=sample_context,
                     signal=signal,
+                    used_taxonomy_reference=used_taxonomy_reference,
                 ),
                 "source_dataset": source_dataset,
                 "source_file": sample.get("source_file", ""),
@@ -462,6 +465,7 @@ def classification_basis(
     sample_domain: str,
     sample_context: str,
     signal: dict[str, object],
+    used_taxonomy_reference: bool = False,
 ) -> str:
     basis = [
         f"organism={organism or 'missing'}",
@@ -479,6 +483,8 @@ def classification_basis(
         basis.append("clinical_attribute_present")
     if signal["metagenome_present"]:
         basis.append("metagenome_assembly_attribute_present")
+    if used_taxonomy_reference:
+        basis.append("taxonomy_reference_present")
     return "; ".join(basis)
 
 

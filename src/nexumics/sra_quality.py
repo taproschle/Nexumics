@@ -33,6 +33,8 @@ def validate_sra_lake(
     *,
     silver_dir: Path,
     gold_dir: Path | None = None,
+    taxonomy_reference_path: Path | None = None,
+    taxonomy_manifest_path: Path | None = None,
     max_unknown_samples: int = 10,
     max_unknown_fraction: float = 0.001,
 ) -> list[QualityCheck]:
@@ -90,6 +92,26 @@ def validate_sra_lake(
         ]
     )
 
+    if taxonomy_reference_path is not None:
+        checks.append(file_exists_check("taxonomy_reference_exists", taxonomy_reference_path))
+        if taxonomy_reference_path.exists():
+            taxonomy_rows = read_csv_rows(taxonomy_reference_path)
+            checks.extend(
+                [
+                    non_empty_unique_check("taxonomy_reference_taxon_id_unique", taxonomy_rows, "taxon_id"),
+                    allowed_values_check(
+                        "taxonomy_reference_sample_domain_allowed_values",
+                        taxonomy_rows,
+                        "sample_domain",
+                        ALLOWED_SAMPLE_DOMAINS,
+                    ),
+                    taxonomy_covers_samples_check(sample_rows, taxonomy_rows),
+                ]
+            )
+
+    if taxonomy_manifest_path is not None:
+        checks.append(file_exists_check("taxonomy_manifest_exists", taxonomy_manifest_path))
+
     if gold_dir is not None:
         for table_name in (
             "sra_domain_summary",
@@ -102,6 +124,26 @@ def validate_sra_lake(
             checks.append(file_exists_check(f"gold_{table_name}_exists", gold_dir / f"{table_name}.parquet"))
 
     return checks
+
+
+def taxonomy_covers_samples_check(
+    sample_rows: list[dict[str, str]],
+    taxonomy_rows: list[dict[str, str]],
+) -> QualityCheck:
+    sample_taxon_ids = {row.get("taxon_id", "") for row in sample_rows if row.get("taxon_id", "")}
+    reference_taxon_ids = {row.get("taxon_id", "") for row in taxonomy_rows if row.get("taxon_id", "")}
+    missing_taxon_ids = sorted(sample_taxon_ids - reference_taxon_ids)
+    return QualityCheck(
+        name="taxonomy_reference_covers_sample_taxon_ids",
+        status="pass" if not missing_taxon_ids else "fail",
+        observed=f"missing={len(missing_taxon_ids)}",
+        expected="all sample taxon_id values are present",
+        message=(
+            "Taxonomy reference covers all sample taxon IDs."
+            if not missing_taxon_ids
+            else f"Taxonomy reference is missing sample taxon IDs: {' | '.join(missing_taxon_ids[:20])}"
+        ),
+    )
 
 
 def file_exists_check(name: str, path: Path) -> QualityCheck:

@@ -83,8 +83,8 @@ Current latest consolidated output:
 
 | Output | Rows |
 | --- | ---: |
-| Bronze runs | 89,840 |
-| Bronze sample attributes | 914,148 |
+| Bronze runs | 97,031 |
+| Bronze sample attributes | 980,764 |
 
 ### 2. Build Silver CSV
 
@@ -119,10 +119,10 @@ Current Silver row counts:
 
 | Table | Rows |
 | --- | ---: |
-| `sra_run.csv` | 89,840 |
-| `sra_sample.csv` | 75,792 |
-| `sra_sample_attribute.csv` | 914,148 |
-| `sra_sample_classification.csv` | 75,792 |
+| `sra_run.csv` | 97,031 |
+| `sra_sample.csv` | 82,559 |
+| `sra_sample_attribute.csv` | 980,764 |
+| `sra_sample_classification.csv` | 82,559 |
 
 ### 3. Update NCBI Taxonomy Reference
 
@@ -142,6 +142,8 @@ Outputs:
 
 ```text
 data/reference/ncbi_taxonomy/taxonomy_reference.csv
+data/raw/ncbi_taxonomy/efetch-taxonomy-batch-<batch-number>-<timestamp>.xml
+data/manifests/ncbi_taxonomy/taxonomy-reference-updates.jsonl
 ```
 
 Purpose:
@@ -149,13 +151,15 @@ Purpose:
 - Read unique SRA `taxon_id` values from Silver samples.
 - Fetch only missing taxon IDs from NCBI Taxonomy.
 - Preserve a local incremental taxonomy reference table.
+- Preserve raw NCBI Taxonomy XML responses and a JSONL update manifest.
 - Improve `sra_sample_classification` by using lineage-derived domains before falling back to heuristics.
 
 Current local reference:
 
 | Output | Rows |
 | --- | ---: |
-| `taxonomy_reference.csv` | 2,714 |
+| `taxonomy_reference.csv` | 2,941 |
+| `taxonomy-reference-updates.jsonl` | 16 events |
 
 ### 4. Export Silver Parquet
 
@@ -188,10 +192,10 @@ Current Silver Parquet outputs:
 
 | Table | Rows | Size |
 | --- | ---: | ---: |
-| `sra_run.parquet` | 89,840 | 3.00 MB |
-| `sra_sample.parquet` | 75,792 | 0.81 MB |
-| `sra_sample_attribute.parquet` | 914,148 | 3.74 MB |
-| `sra_sample_classification.parquet` | 75,792 | 0.92 MB |
+| `sra_run.parquet` | 97,031 | 3.26 MB |
+| `sra_sample.parquet` | 82,559 | 0.89 MB |
+| `sra_sample_attribute.parquet` | 980,764 | 4.14 MB |
+| `sra_sample_classification.parquet` | 82,559 | 1.02 MB |
 
 ### 5. Build Gold Parquet
 
@@ -228,9 +232,9 @@ Current Gold outputs:
 | --- | ---: | ---: |
 | `sra_domain_summary.parquet` | 9 | 1.85 KB |
 | `sra_context_summary.parquet` | 7 | 1.02 KB |
-| `sra_domain_library_strategy_summary.parquet` | 73 | 3.33 KB |
+| `sra_domain_library_strategy_summary.parquet` | 76 | 3.41 KB |
 | `sra_top_organisms_by_domain.parquet` | 75 | 3.30 KB |
-| `sra_attribute_category_by_domain.parquet` | 210 | 3.31 KB |
+| `sra_attribute_category_by_domain.parquet` | 219 | 3.42 KB |
 | `sra_quality_summary.parquet` | 1 | 0.80 KB |
 
 ### 6. Summarize Silver
@@ -257,7 +261,7 @@ Current summary files:
 | `sample_domain_counts.csv` | 9 |
 | `organism_group_counts.csv` | 9 |
 | `sample_context_counts.csv` | 7 |
-| `sample_domain_context_counts.csv` | 39 |
+| `sample_domain_context_counts.csv` | 41 |
 | `attribute_category_counts.csv` | 39 |
 | `library_strategy_counts.csv` | 21 |
 
@@ -277,8 +281,8 @@ Current result:
 
 | Metric | Count |
 | --- | ---: |
-| Quality checks | 17 |
-| Passed | 17 |
+| Quality checks | 22 |
+| Passed | 22 |
 | Failed | 0 |
 
 ## Current Quality Checks
@@ -298,6 +302,11 @@ The current quality report verifies:
 | `sra_sample_attribute_required_fields_present` | Ensure required sample attribute fields are present. |
 | `sra_sample_domain_allowed_values` | Ensure domains are controlled vocabulary values. |
 | `sra_unknown_sample_count_below_threshold` | Ensure unknown samples stay below either the absolute threshold or the proportional threshold. |
+| `taxonomy_reference_exists` | Ensure the local NCBI Taxonomy reference exists. |
+| `taxonomy_reference_taxon_id_unique` | Ensure `taxonomy_reference.csv` has non-empty unique taxon IDs. |
+| `taxonomy_reference_sample_domain_allowed_values` | Ensure taxonomy-derived domains are controlled vocabulary values. |
+| `taxonomy_reference_covers_sample_taxon_ids` | Ensure every Silver sample `taxon_id` exists in the taxonomy reference. |
+| `taxonomy_manifest_exists` | Ensure the NCBI Taxonomy update manifest exists. |
 | `gold_sra_domain_summary_exists` | Ensure Gold domain summary exists. |
 | `gold_sra_context_summary_exists` | Ensure Gold context summary exists. |
 | `gold_sra_domain_library_strategy_summary_exists` | Ensure Gold domain/library summary exists. |
@@ -305,7 +314,7 @@ The current quality report verifies:
 | `gold_sra_attribute_category_by_domain_exists` | Ensure Gold attribute category summary exists. |
 | `gold_sra_quality_summary_exists` | Ensure Gold quality summary exists. |
 
-The current unknown sample count is 56, or 0.074% of classified samples. This passes because the quality gate now allows either a small absolute count or a low proportional rate for larger local lakes.
+The current unknown sample count is 56, or 0.068% of classified samples. This passes because the quality gate now allows either a small absolute count or a low proportional rate for larger local lakes.
 
 ## Current Gold Snapshot
 
@@ -313,14 +322,14 @@ The current `sra_domain_summary` result is:
 
 | Domain | Samples | Runs | Attributes |
 | --- | ---: | ---: | ---: |
-| `metagenome` | 16,665 | 17,899 | 273,614 |
-| `animal` | 15,934 | 21,911 | 153,037 |
+| `metagenome` | 17,504 | 18,743 | 280,353 |
+| `animal` | 15,993 | 22,001 | 154,085 |
 | `microorganism` | 14,081 | 14,867 | 179,407 |
-| `human` | 10,897 | 14,288 | 118,845 |
+| `human` | 11,155 | 14,547 | 121,683 |
+| `plant` | 7,811 | 8,133 | 90,630 |
+| `fungi` | 6,075 | 8,060 | 55,645 |
 | `virus` | 4,954 | 5,094 | 46,702 |
-| `plant` | 4,947 | 5,139 | 63,816 |
-| `protist` | 4,512 | 5,105 | 46,072 |
-| `fungi` | 3,746 | 5,475 | 31,941 |
+| `protist` | 4,930 | 5,524 | 51,545 |
 | `unknown` | 56 | 62 | 714 |
 
 ## Querying With DuckDB

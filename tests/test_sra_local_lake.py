@@ -77,6 +77,16 @@ class SraLocalLakeTests(unittest.TestCase):
                     }
                 ],
             )
+            taxonomy_path = root / "reference" / "ncbi_taxonomy" / "taxonomy_reference.csv"
+            taxonomy_path.parent.mkdir(parents=True)
+            self.write_csv(
+                taxonomy_path,
+                ["taxon_id", "sample_domain", "organism_group"],
+                [{"taxon_id": "9606", "sample_domain": "human", "organism_group": "Eukaryota"}],
+            )
+            taxonomy_manifest_path = root / "manifests" / "ncbi_taxonomy" / "taxonomy-reference-updates.jsonl"
+            taxonomy_manifest_path.parent.mkdir(parents=True)
+            taxonomy_manifest_path.write_text('{"status": "success"}\n', encoding="utf-8")
 
             result = build_sra_local_lake(
                 bronze_batch_dir=bronze_batch_dir,
@@ -85,6 +95,8 @@ class SraLocalLakeTests(unittest.TestCase):
                 silver_parquet_dir=root / "silver_parquet",
                 silver_summary_dir=root / "summary",
                 gold_parquet_dir=root / "gold_parquet",
+                taxonomy_reference_path=taxonomy_path,
+                taxonomy_manifest_path=taxonomy_manifest_path,
                 quality_report_path=root / "quality" / "report.csv",
             )
 

@@ -27,6 +27,7 @@ def build_sra_local_lake(
     silver_summary_dir: Path = Path("data/silver/sra/summary"),
     gold_parquet_dir: Path = Path("data/gold/sra/parquet"),
     taxonomy_reference_path: Path = Path("data/reference/ncbi_taxonomy/taxonomy_reference.csv"),
+    taxonomy_manifest_path: Path = Path("data/manifests/ncbi_taxonomy/taxonomy-reference-updates.jsonl"),
     quality_report_path: Path = Path("data/quality/sra/sra-local-lake-quality-report.csv"),
     max_unknown_samples: int = 10,
 ) -> dict[str, object]:
@@ -64,6 +65,8 @@ def build_sra_local_lake(
     quality_checks = validate_sra_lake(
         silver_dir=silver_dir,
         gold_dir=gold_parquet_dir,
+        taxonomy_reference_path=taxonomy_reference_path,
+        taxonomy_manifest_path=taxonomy_manifest_path,
         max_unknown_samples=max_unknown_samples,
     )
     write_quality_report(quality_report_path, quality_checks)

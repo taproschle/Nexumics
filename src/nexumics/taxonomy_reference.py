@@ -5,10 +5,12 @@ from __future__ import annotations
 import csv
 from collections.abc import Iterable
 from dataclasses import dataclass
+import json
 from pathlib import Path
 import xml.etree.ElementTree as ET
 
 from nexumics.entrez import EntrezClient, EntrezConfig
+from nexumics.raw_storage import utc_timestamp, write_raw_response
 
 
 TAXONOMY_REFERENCE_FIELDS = [
@@ -38,6 +40,8 @@ class TaxonomyUpdateSummary:
     fetched_taxon_ids: int
     output_taxon_ids: int
     output_path: Path
+    raw_batch_count: int
+    manifest_path: Path
 
 
 def update_taxonomy_reference(
@@ -48,6 +52,8 @@ def update_taxonomy_reference(
     api_key: str | None = None,
     batch_size: int = 200,
     rebuild: bool = False,
+    raw_dir: Path = Path("data/raw/ncbi_taxonomy"),
+    manifest_path: Path = Path("data/manifests/ncbi_taxonomy/taxonomy-reference-updates.jsonl"),
 ) -> TaxonomyUpdateSummary:
     if batch_size <= 0:
         raise ValueError("batch_size must be positive")
@@ -57,11 +63,43 @@ def update_taxonomy_reference(
     missing_taxon_ids = sorted(sample_taxon_ids - set(existing_rows), key=taxon_sort_key)
 
     fetched_rows: dict[str, dict[str, str]] = {}
+    raw_batch_count = 0
     if missing_taxon_ids:
         client = EntrezClient(EntrezConfig(email=email, api_key=api_key))
-        for batch in batched(missing_taxon_ids, batch_size):
+        for batch_number, batch in enumerate(batched(missing_taxon_ids, batch_size), start=1):
             response = client.efetch(db="taxonomy", ids=batch, retmode="xml")
-            fetched_rows.update(parse_taxonomy_xml(response.text))
+            raw_xml_path = write_raw_response(
+                response,
+                output_dir=raw_dir,
+                stem=f"efetch-taxonomy-batch-{batch_number:06d}-{utc_timestamp()}",
+                extension="xml",
+            )
+            batch_rows = parse_taxonomy_xml(response.text)
+            fetched_rows.update(batch_rows)
+            raw_batch_count += 1
+            append_taxonomy_manifest_event(
+                manifest_path,
+                {
+                    "status": "success",
+                    "batch_number": batch_number,
+                    "requested_taxon_ids": len(batch),
+                    "fetched_taxon_ids": len(batch_rows),
+                    "raw_xml_path": str(raw_xml_path),
+                    "output_path": str(output_path),
+                    "rebuild": rebuild,
+                },
+            )
+    else:
+        append_taxonomy_manifest_event(
+            manifest_path,
+            {
+                "status": "noop",
+                "requested_taxon_ids": 0,
+                "fetched_taxon_ids": 0,
+                "output_path": str(output_path),
+                "rebuild": rebuild,
+            },
+        )
 
     all_rows = {**existing_rows, **fetched_rows}
     write_taxonomy_reference(output_path, all_rows.values())
@@ -72,6 +110,8 @@ def update_taxonomy_reference(
         fetched_taxon_ids=len(fetched_rows),
         output_taxon_ids=len(all_rows),
         output_path=output_path,
+        raw_batch_count=raw_batch_count,
+        manifest_path=manifest_path,
     )
 
 
@@ -220,6 +260,13 @@ def write_taxonomy_reference(path: Path, rows: Iterable[dict[str, str]]) -> int:
         for row in sorted_rows:
             writer.writerow({field: row.get(field, "") for field in TAXONOMY_REFERENCE_FIELDS})
     return len(sorted_rows)
+
+
+def append_taxonomy_manifest_event(path: Path, event: dict[str, object]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {"created_at": utc_timestamp(), **event}
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(payload, sort_keys=True) + "\n")
 
 
 def batched(values: list[str], batch_size: int) -> Iterable[list[str]]:

@@ -182,6 +182,8 @@ This reads unique `taxon_id` values from `data/silver/sra/sra_sample.csv`, fetch
 
 ```text
 data/reference/ncbi_taxonomy/taxonomy_reference.csv
+data/raw/ncbi_taxonomy/
+data/manifests/ncbi_taxonomy/taxonomy-reference-updates.jsonl
 ```
 
 The Silver classifier uses this local reference when it exists, then falls back to transparent heuristic rules for missing taxon IDs.

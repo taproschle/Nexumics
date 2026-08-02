@@ -12,6 +12,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Validate local SRA lake outputs.")
     parser.add_argument("--silver-dir", default="data/silver/sra", help="Directory containing SRA Silver CSV tables.")
     parser.add_argument("--gold-dir", default="data/gold/sra/parquet", help="Directory containing SRA Gold Parquet tables.")
+    parser.add_argument("--taxonomy-reference-path", default="data/reference/ncbi_taxonomy/taxonomy_reference.csv")
+    parser.add_argument("--taxonomy-manifest-path", default="data/manifests/ncbi_taxonomy/taxonomy-reference-updates.jsonl")
     parser.add_argument(
         "--report-path",
         default="data/quality/sra/sra-local-lake-quality-report.csv",
@@ -26,6 +28,8 @@ def main() -> None:
     checks = validate_sra_lake(
         silver_dir=Path(args.silver_dir),
         gold_dir=Path(args.gold_dir),
+        taxonomy_reference_path=Path(args.taxonomy_reference_path),
+        taxonomy_manifest_path=Path(args.taxonomy_manifest_path),
         max_unknown_samples=args.max_unknown_samples,
     )
     write_quality_report(Path(args.report_path), checks)

@@ -53,6 +53,47 @@ class SraQualityTests(unittest.TestCase):
 
             self.assertNotIn("sra_sample_domain_allowed_values", failed_checks)
 
+    def test_validate_sra_lake_checks_taxonomy_reference(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            silver_dir = root / "silver"
+            taxonomy_path = root / "taxonomy_reference.csv"
+            manifest_path = root / "taxonomy-reference-updates.jsonl"
+            silver_dir.mkdir()
+            self.write_valid_silver_tables(silver_dir)
+            self.write_csv(
+                taxonomy_path,
+                ["taxon_id", "sample_domain"],
+                [{"taxon_id": "9606", "sample_domain": "human"}],
+            )
+            manifest_path.write_text('{"status": "success"}\n', encoding="utf-8")
+
+            checks = validate_sra_lake(
+                silver_dir=silver_dir,
+                taxonomy_reference_path=taxonomy_path,
+                taxonomy_manifest_path=manifest_path,
+            )
+
+            self.assertTrue(all(check.status == "pass" for check in checks))
+
+    def test_validate_sra_lake_fails_when_taxonomy_reference_misses_sample_taxon_id(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            silver_dir = root / "silver"
+            taxonomy_path = root / "taxonomy_reference.csv"
+            silver_dir.mkdir()
+            self.write_valid_silver_tables(silver_dir)
+            self.write_csv(
+                taxonomy_path,
+                ["taxon_id", "sample_domain"],
+                [{"taxon_id": "5833", "sample_domain": "protist"}],
+            )
+
+            checks = validate_sra_lake(silver_dir=silver_dir, taxonomy_reference_path=taxonomy_path)
+            failed_checks = {check.name for check in checks if check.status == "fail"}
+
+            self.assertIn("taxonomy_reference_covers_sample_taxon_ids", failed_checks)
+
     def test_unknown_threshold_can_pass_by_fraction(self) -> None:
         check = max_value_check(
             "sra_unknown_sample_count_below_threshold",
