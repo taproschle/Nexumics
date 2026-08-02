@@ -60,6 +60,7 @@ The repository is in the initial documentation stage. The current versioned arti
 - `AGENTS.md`: public agent context and repository working guidelines.
 - `docs/data-sources.md`: source access strategy and NCBI Entrez decision record.
 - `docs/sra-metadata-discovery.md`: first SRA metadata inspection and design implications.
+- `docs/sra-data-model.md`: SRA bronze/silver modeling strategy across humans, microorganisms, and environmental samples.
 - `docs/project-brief.md`: GitHub-readable project brief.
 - `docs/technical-design.md`: GitHub-readable technical design document.
 - `src/nexumics/`: initial Python package for Entrez access, raw storage, and SRA parsing.
@@ -86,6 +87,7 @@ The first code scaffold exists and implements a small SRA discovery flow.
 - Treat NCBI Entrez E-utilities as the first source access layer unless the user explicitly revisits the decision.
 - Treat SRA metadata discovery as the current first source exploration path.
 - Keep the first SRA flow small: `esearch` for UIDs, `efetch` for XML, raw local persistence, and a bronze CSV preview.
+- Do not promote human-specific sample fields such as `age`, `sex`, and `tissue` into the universal SRA model without a flexible attribute strategy.
 - Prefer small, well-scoped changes that make the project easier to understand.
 - Do not introduce a framework or service unless it supports the planned stack or the user explicitly approves the change.
 - Explain meaningful technical decisions in the user conversation before or while implementing them.
